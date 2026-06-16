@@ -1,0 +1,78 @@
+<section class="about-ii">
+  <div class="in-about">
+    <div class="container-ii">
+      <div class="flex-i gap-i">
+        <div class="item-about item-about-content w-md-7 w-12">
+          <div class="in-item-about">
+            {% if section.settings.heading != blank %}
+              <div class="he-m uppercase fw-extrablack">
+                <h2>{{ section.settings.heading }}</h2>
+              </div>
+            {% endif %}
+
+            {% if section.settings.text != blank %}
+              <div class="bo-s">
+                {{ section.settings.text }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="item-about item-about-media w-md-5 w-12">
+          <div class="in-item-about">
+            {% if section.settings.image != blank %}
+              <figure class="media-about">
+                {{
+                  section.settings.image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '480, 720, 960, 1200',
+                    alt: section.settings.image_alt | default: section.settings.heading
+                }}
+              </figure>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About II",
+  "tag": "section",
+  "class": "section-about-ii",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WHY WE EXIST"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Many products prioritize taste or trends over how food actually makes people feel. JustNosh was founded to provide high-protein snacks made with intention, using ingredients you recognize, trust, and can digest.</p><p>Our focus is simple: protein-forward products built with ingredient integrity. No fillers. No artificial flavors. No unnecessary extras. Just ingredients that earn their place in every bar.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "JustNosh protein bars"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About II"
+    }
+  ]
+}
+{% endschema %}

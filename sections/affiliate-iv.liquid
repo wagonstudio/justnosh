@@ -1,0 +1,112 @@
+<section class="affiliate-iv">
+  <div class="in-affiliate container-i">
+
+    <div class="wrap-affiliate">
+      
+      <div class="head-affiliate">
+        {% if section.settings.heading != blank %}
+          <div class="he-m fw-extrablack">
+            <h2>
+              {{ section.settings.heading }}
+            </h2>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if section.blocks.size > 0 %}
+        <div class="body-affiliate">
+          <div class="flex-i justify-center-i">
+
+            {% for block in section.blocks %}
+              <div class="item-affiliate w-12 w-md-4" {{ block.shopify_attributes }}>
+                <div class="in-item-affiliate">
+
+                  {% if block.settings.number != blank %}
+                    <div class="number-i">
+                      <span>{{ block.settings.number }}</span>
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.text != blank %}
+                    <div class="he-xs fw-semibold">
+                      <p>{{ block.settings.text }}</p>
+                    </div>
+                  {% endif %}
+
+                </div>
+              </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Affiliate IV",
+  "tag": "section",
+  "class": "section-affiliate-v",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "HOW IT WORKS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "1"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Apply to become a JustNosh affiliate"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Affiliate V",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "number": "1",
+            "text": "Apply to become a JustNosh affiliate"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "number": "2",
+            "text": "Share JustNosh with your ingredient-obsessed audience"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "number": "3",
+            "text": "Earn 10% commissions on every sale through your link or code"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

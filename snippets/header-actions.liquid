@@ -1,0 +1,804 @@
+{% doc %}
+  Header Actions Component
+
+  Renders the header actions.
+
+  @param {object} [section] - The section object providing settings such as actions_font.
+  @param {block} [block] - The block object, used for Shopify editor attributes.
+  @param {string} [display_style] - Controls display mode for header actions: 'icon' or 'text'.
+  @param {string} [customer_account_menu] - The menu handle passed to the shopify-account component.
+
+  @example
+  {% render 'header-actions', section: section %}
+{% enddoc %}
+
+<script
+  type="module"
+  src="{{ 'cart-icon.js' | asset_url }}"
+  fetchpriority="low"
+></script>
+
+{% capture cart_icon %}
+  <cart-icon
+    class="header-actions__cart-icon{% if display_style == 'text' %} header-actions__cart-icon--text{% endif %}{% unless cart == empty %} header-actions__cart-icon--has-cart{% endunless %}"
+    data-testid="cart-icon"
+  >
+    <span class="{% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
+      {{ 'content.cart_title' | t }}
+    </span>
+
+    <span
+      class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}"
+      aria-hidden="true"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none">
+        <path d="M10 13.5C10.0001 13.697 10.0389 13.8922 10.1144 14.0742C10.1899 14.2562 10.3005 14.4216 10.4398 14.5609C10.5792 14.7002 10.7447 14.8106 10.9267 14.886C11.1088 14.9613 11.304 15.0001 11.501 15C11.698 14.9999 11.8932 14.9611 12.0752 14.8856C12.2572 14.8101 12.4226 14.6995 12.5619 14.5602C12.7012 14.4208 12.8116 14.2553 12.887 14.0733C12.9623 13.8912 13.0011 13.696 13.001 13.499C13.0009 13.101 12.8427 12.7194 12.5612 12.4381C12.2797 12.1568 11.898 11.9989 11.5 11.999C11.102 11.9991 10.7204 12.1573 10.4391 12.4388C10.1578 12.7203 9.99987 13.102 10 13.5ZM0 13.5C6.58035e-05 13.697 0.0389423 13.8922 0.11441 14.0742C0.189878 14.2562 0.300459 14.4216 0.439839 14.5609C0.57922 14.7002 0.744671 14.8106 0.926745 14.886C1.10882 14.9613 1.30395 15.0001 1.501 15C1.69805 14.9999 1.89315 14.9611 2.07518 14.8856C2.2572 14.8101 2.42258 14.6995 2.56187 14.5602C2.70116 14.4208 2.81163 14.2553 2.88697 14.0733C2.96232 13.8912 3.00107 13.696 3.001 13.499C3.00087 13.101 2.84265 12.7194 2.56116 12.4381C2.27967 12.1568 1.89796 11.9989 1.5 11.999C1.10204 11.9991 0.720437 12.1573 0.439133 12.4388C0.157828 12.7203 -0.000133514 13.102 0 13.5ZM0 7V1H12C12 0.734784 12.1054 0.48043 12.2929 0.292893C12.4804 0.105357 12.7348 0 13 0H16V1H14L13.249 7.438C13.5727 7.69684 13.808 8.04986 13.9223 8.44823C14.0367 8.84661 14.0244 9.27067 13.8873 9.66179C13.7501 10.0529 13.4949 10.3917 13.1568 10.6315C12.8187 10.8712 12.4145 11 12 11H0V10H12C12.2652 10 12.5196 9.89464 12.7071 9.70711C12.8946 9.51957 13 9.26522 13 9V8.99L0 7Z" fill="#F9F9F7"/>
+      </svg>
+    </span>
+    <span class="text-cart sp-xxs uppercase">Cart</span>
+
+    {% render 'cart-bubble', limit: 100 %}
+  </cart-icon>
+{% endcapture %}
+
+{% capture account_icon %}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="15"
+    height="17"
+    viewBox="0 0 15 17"
+    fill="none"
+    slot="signed-out-avatar"
+    class="account-button__icon"
+  >
+    <path
+      stroke="currentColor"
+      stroke-linejoin="round"
+      stroke-width="var(--icon-stroke-width)"
+      d="M10.375 3.813a3.063 3.063 0 1 1-6.125 0 3.063 3.063 0 0 1 6.125 0ZM7.313 9.5c-3.667 0-6.24 2.691-6.563 6.125h13.125C13.552 12.191 10.979 9.5 7.312 9.5Z"
+    />
+  </svg>
+{% endcapture %}
+
+<header-actions
+  {% if display_style == 'text' %}
+    class="header-actions--text"
+  {% endif %}
+  {{- block.shopify_attributes -}}
+>
+  {% if shop.customer_accounts_enabled %}
+    {% liquid
+      assign account_actions_style = ''
+      if display_style == 'text' and section
+        assign actions_font = section.settings.actions_font | default: 'body'
+        assign font_obj = settings.type_heading_font
+        case actions_font
+          when 'body'
+            assign font_obj = settings.type_body_font
+          when 'subheading'
+            assign font_obj = settings.type_subheading_font
+          when 'accent'
+            assign font_obj = settings.type_accent_font
+        endcase
+        assign font_family = font_obj.family | append: ', ' | append: font_obj.fallback_families
+        assign font_family_safe = font_family | replace: '"', "'"
+        assign account_actions_style = '--header-actions-font-family: ' | append: font_family_safe | append: '; --header-actions-font-weight: ' | append: font_obj.weight | append: ';'
+      endif
+    %}
+    <div
+      class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
+    >
+      <shopify-account
+        menu="{{ customer_account_menu }}"
+        {% if account_actions_style != blank %}
+          style="{{ account_actions_style }}"
+        {% endif %}
+      >
+        {% if customer %}
+          <div class="account-button__fallback"></div>
+        {% else %}
+          <span
+            slot="signed-out-avatar"
+            class="account-button__text header-actions__text-style {% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}"
+          >
+            {{ 'content.account_title' | t }}
+          </span>
+
+          <span
+            slot="signed-out-avatar"
+            class="{% if display_style != 'icon' %}desktop:hidden{% endif %}"
+            aria-hidden="true"
+          >
+            {{ account_icon }}
+          </span>
+        {% endif %}
+      </shopify-account>
+    </div>
+  {% endif %}
+
+  {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
+    <script
+      src="{{ 'cart-drawer.js' | asset_url }}"
+      type="module"
+      fetchpriority="low"
+    ></script>
+
+    {% capture empty_cart_drawer_content %}
+      <div class="cart-drawer__header">
+        <button
+          ref="closeButton"
+          on:click="cart-drawer-component/close"
+          class="button close-button cart-drawer__close-button button-unstyled"
+          aria-label="{{ 'actions.close_dialog' | t }}"
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      </div>
+
+      <div
+        class="cart-drawer__content"
+        aria-label="{{ 'accessibility.cart' | t }}"
+      >
+        <div class="flex-i space-between">
+          <div class="he-m fw-black uppercase">
+            <h2 class="cart-drawer__heading he-iv uppercase cart-drawer__heading--empty" id="cart-drawer-heading-empty" >
+              {{ 'content.your_cart_is_empty' | t }}
+            </h2>
+          </div>
+          
+
+          <div class="cart-drawer__items">
+            {% render 'cart-products', force_empty: true %}
+          </div>
+        </div>
+      </div>
+    {% endcapture %}
+
+    <cart-drawer-component
+      class="cart-drawer{% if display_style == 'text' %} cart-drawer--text{% endif %}"
+      {{ block.shopify_attributes }}
+      {% if settings.auto_open_cart_drawer %}
+        auto-open
+      {% endif %}
+    >
+      <template id="empty-cart-template">
+        {{ empty_cart_drawer_content }}
+      </template>
+      <button
+        class="header-actions__action button-unstyled{% if display_style == 'text' %} header-actions__text-style{% endif %}"
+        on:click="/open"
+        aria-haspopup="dialog"
+        aria-label="{{ 'accessibility.cart' | t }}"
+        aria-describedby="cart-bubble-text"
+        data-testid="cart-drawer-trigger"
+      >
+        {{ cart_icon }}
+      </button>
+
+      <dialog
+        ref="dialog"
+        class="cart-drawer__dialog dialog-modal dialog-drawer {% if cart.empty? %} cart-drawer--empty{%endif%}"
+        data-testid="cart-drawer-dialog"
+        aria-labelledby="{% if cart.empty? %}cart-drawer-heading-empty{% else %}cart-drawer-heading{% endif %}"
+        scroll-lock
+        cart-summary-sticky="true"
+      >
+        <span
+          ref="liveRegion"
+          class="visually-hidden"
+          role="status"
+        ></span>
+        <div
+          class="cart-drawer__inner"
+          data-hydration-key="cart-drawer-inner"
+        >
+          {% capture cart_items_children %}
+            {%- if cart.empty? -%}
+              {{ empty_cart_drawer_content }}
+            {%- else -%}
+              <div
+                class="cart-drawer__header"
+                id="cart-drawer-header"
+              >
+                <div class="flex-i space-between w-100">
+                  <div class="he-m fw-black uppercase">
+                    <h2> Your order <span class="d-none">{% render 'cart-bubble' %}</span></h2>
+                  </div>
+                  <button
+                    ref="closeButton"
+                    on:click="cart-drawer-component/close"
+                    class="button close-button-i cart-drawer__close-button button-unstyled"
+                    aria-label="{{ 'actions.close_dialog' | t }}"
+                  >
+                    <span class="iconclose-i">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none">
+                        <path d="M22.4906 0.526885C22.3292 0.365161 22.1375 0.236854 21.9264 0.149311C21.7154 0.0617679 21.4891 0.0167062 21.2607 0.0167062C21.0322 0.0167062 20.806 0.0617679 20.5949 0.149311C20.3839 0.236854 20.1922 0.365161 20.0308 0.526885L11.5 9.04021L2.96923 0.509439C2.80772 0.347927 2.61598 0.219808 2.40495 0.132399C2.19392 0.0449888 1.96775 1.70181e-09 1.73934 0C1.51092 -1.70181e-09 1.28475 0.0449888 1.07372 0.132399C0.862694 0.219808 0.670951 0.347927 0.509439 0.509439C0.347927 0.670951 0.219808 0.862694 0.132399 1.07372C0.0449888 1.28475 -1.70181e-09 1.51092 0 1.73934C1.70181e-09 1.96775 0.0449888 2.19392 0.132399 2.40495C0.219808 2.61598 0.347927 2.80772 0.509439 2.96923L9.04021 11.5L0.509439 20.0308C0.347927 20.1923 0.219808 20.384 0.132399 20.5951C0.0449888 20.8061 0 21.0323 0 21.2607C0 21.4891 0.0449888 21.7153 0.132399 21.9263C0.219808 22.1373 0.347927 22.329 0.509439 22.4906C0.670951 22.6521 0.862694 22.7802 1.07372 22.8676C1.28475 22.955 1.51092 23 1.73934 23C1.96775 23 2.19392 22.955 2.40495 22.8676C2.61598 22.7802 2.80772 22.6521 2.96923 22.4906L11.5 13.9598L20.0308 22.4906C20.1923 22.6521 20.384 22.7802 20.5951 22.8676C20.8061 22.955 21.0323 23 21.2607 23C21.4891 23 21.7153 22.955 21.9263 22.8676C22.1373 22.7802 22.329 22.6521 22.4906 22.4906C22.6521 22.329 22.7802 22.1373 22.8676 21.9263C22.955 21.7153 23 21.4891 23 21.2607C23 21.0323 22.955 20.8061 22.8676 20.5951C22.7802 20.384 22.6521 20.1923 22.4906 20.0308L13.9598 11.5L22.4906 2.96923C23.1535 2.30631 23.1535 1.18981 22.4906 0.526885Z" fill="#F9F9F7"/>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <scroll-hint
+                class="cart-drawer__content"
+                aria-label="{{ 'accessibility.cart' | t }}"
+                style="--header-height: 60px;"
+              >
+                <scroll-hint data-lenis-prevent
+                  class="cart-drawer__items"
+                >
+                  {% render 'cart-products' %}
+                </scroll-hint>
+
+                <div
+                  class="cart-drawer__summary"
+                >
+                  {% render 'cart-summary', section_id: section.id %}
+                </div>
+              </scroll-hint>
+            {%- endif -%}
+          {% endcapture %}
+          {% render 'cart-items-component', children: cart_items_children, is_drawer: true, section_id: section.id %}
+        </div>
+      </dialog>
+    </cart-drawer-component>
+  {% else %}
+    <a
+      href="{{ routes.cart_url }}"
+      class="header-actions__action action__cart{% if display_style == 'text' %} header-actions__text-style{% endif %}"
+      aria-label="{{ 'accessibility.cart' | t }}"
+      aria-describedby="cart-bubble-text"
+    >
+      {{ cart_icon }}
+    </a>
+  {% endif %}
+
+  <span
+    ref="liveRegion"
+    class="visually-hidden"
+    role="status"
+    data-testid="cart-count-live-region"
+  ></span>
+</header-actions>
+
+<script
+  type="module"
+  src="{{ 'header-actions.js' | asset_url }}"
+  fetchpriority="low"
+></script>
+
+{% stylesheet %}
+  .header {
+    --account-offset-top: calc(
+      var(--header-group-height) + (var(--header-height) * var(--transparent-header-offset-boolean))
+    );
+
+    &[data-sticky-state='active'] {
+      --account-offset-top: calc(var(--header-height) - 1px);
+    }
+  }
+
+  .account-button {
+    /* Remove the background color from the color scheme, we want to inherit the color of the header */
+    background: transparent;
+  }
+
+  .account-button__icon,
+  .account-button__text {
+    color: var(--color-account-icon);
+    transition: color var(--header-content-transition-timing);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  shopify-account {
+    --shopify-account-font-heading: var(--font-heading--family);
+    --shopify-account-font-heading-weight: var(--font-heading--weight);
+    --shopify-account-font-body: var(--font-body--family);
+    --shopify-account-font-body-weight: var(--font-body--weight);
+    --shopify-account-radius-base: var(--style-border-radius-popover);
+    --shopify-account-radius-button: var(--style-border-radius-buttons-primary);
+    --shopify-account-radius-button-small: var(--style-border-radius-buttons-primary);
+    --shopify-account-radius-input: var(--style-border-radius-buttons-primary);
+    --shopify-account-color-background: var(--color-background);
+    --shopify-account-color-text: var(--color-foreground);
+    --shopify-account-color-accent: var(--color-primary-button-background);
+    --shopify-account-color-accent-text: var(--color-primary-button-text);
+    --shopify-account-dialog-position-top: var(--account-offset-top);
+
+    &:not(:defined) {
+      min-width: 44px;
+      height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Match the line height of the other buttons */
+      line-height: normal;
+    }
+  }
+
+  .account-button__fallback {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--shopify-account-color-accent, #0a142f);
+  }
+
+  .account-button--text shopify-account {
+    color: inherit;
+  }
+
+  .cart-drawer {
+    --cart-drawer-padding: var(--padding-xl) var(--padding-xl);
+    --cart-drawer-padding-desktop: var(--padding-xl) var(--padding-2xl);
+
+    @media screen and (min-width: 750px) {
+      margin-inline-end: calc(var(--gap-xs) * -1);
+    }
+  }
+  .cart-drawer .cart-items__media,
+  .cart-drawer .cart-items__media-container {
+    display: flex;
+    align-items: center;
+  }
+  @media screen and (min-width: 750px) {
+    .cart-drawer--text {
+      display: flex;
+      align-items: center;
+    }
+  }
+  @media(min-width:992px){
+    .cart-drawer .cart-items__quantity .quantity-selector {
+      width: 6vw;
+      height: 2.5vw;
+    }
+  }
+
+  @media(max-width:992px) and (min-width:768px){
+    .cart-drawer .cart-items__quantity .quantity-selector {
+      width: 16vw;
+      height: 3vw;
+    }
+  }
+  @media(max-width:768px) and (min-width:576px){
+    .cart-drawer .cart-items__quantity .quantity-selector {
+      width: 18vw;
+      height: 7vw;
+    }
+  }
+  @media(max-width:576px){
+    .cart-drawer .cart-items__quantity .quantity-selector {
+      width: 20vw;
+      height: 8vw;
+    }
+  }
+  .cart-drawer .cart-items__quantity-controls .quantity-selector-wrapper {
+    order: 2;
+    width: 100%;
+  }
+  .cart-drawer .cart-items__quantity-controls button {
+    order: 1;
+  }
+  .cart-drawer .cart-items__quantity .quantity-selector button.quantity-minus {
+    order: 1;
+  }
+  .cart-drawer .cart-items__quantity .quantity-selector {
+    display: flex;
+    align-items: center;
+    padding: 1vw;
+    background-color: var(--color-blanco);
+    color: var(--color-azul-oscuro);
+  }
+  .cart-drawer .cart-items__quantity .quantity-selector button {
+    color: var(--color-azul-oscuro);
+  }
+
+  .cart-drawer .cart-items__quantity .quantity-selector input {
+      color: var(--color-azul-oscuro);
+  }
+  .cart-items .quantity-selector button{
+    max-width:25%;
+  }
+  .cart-drawer .cart-items__quantity input {
+    order: 2;
+    max-width: 50%;
+  }
+  .cart-drawer .cart-items__quantity button.quantity-plus {
+    order: 3;
+  }
+  .cart-drawer__dialog {
+    position: fixed;
+    overflow: hidden;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border-left: var(--style-border-drawer);
+    box-shadow: var(--shadow-drawer);
+    background-color: var(--color-azul-oscuro);
+    color: var(--color-blanco);
+
+    @media screen and (min-width: 768px) {
+      width: 40vw;
+      max-width: 95vw;
+    }
+  }
+  .cart-drawer__dialog {
+    font-family: 'obviously', sans-serif;
+  }
+
+  /* Needed to ensure the drawer is full height */
+  .cart-drawer__dialog:modal {
+    max-height: 100dvh;
+    overflow-y: hidden;
+  }
+
+  .cart-drawer__inner {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .cart-drawer__content {
+    height: calc(100% - var(--header-height));
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background-color: var(--color-background);
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .cart-drawer__heading {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin-bottom: 0;
+  }
+
+  .cart-drawer--empty .cart-drawer__content {
+    text-align: center;
+    min-height: auto;
+  }
+
+  .cart-drawer--empty .cart-drawer__heading {
+    margin-bottom: var(--margin-md);
+  }
+
+  .cart-drawer__items .cart-items__table-row {
+    padding-bottom: 2vw;
+    margin-bottom: 2vw;
+    border-bottom: 1px solid #f9f9f75c;
+  }
+
+  .cart-drawer__items .cart-items__table-row:has(+ .cart-items__nested-line) {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .cart-drawer__items .cart-items__table-row:last-child {
+    border-bottom: none;
+  }
+
+  .cart-drawer__summary {
+    --cart-drawer-summary-padding: var(--padding-lg);
+
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-xl);
+    padding: var(--cart-drawer-summary-padding);
+    margin-top: auto;
+    background-color: var(--color-background);
+    /* stylelint-disable-next-line color-named */
+    mask-image: linear-gradient(to bottom, transparent, black var(--cart-drawer-summary-padding));
+
+    @media screen and (min-width: 750px) {
+      --cart-drawer-summary-padding: var(--padding-2xl);
+    }
+  }
+
+  .cart-drawer__dialog[cart-summary-sticky='false'] .cart-drawer__summary {
+    position: static;
+    mask-image: none;
+  }
+
+  .cart-drawer__dialog[cart-summary-sticky='false'] .cart-drawer__items {
+    overflow: unset;
+  }
+
+  .cart-actions summary {
+    padding-inline: 0;
+    line-height: 1.2;
+  }
+
+  .cart-drawer__summary .cart__summary-totals:not(:has(.cart__subtotal-container:empty)) {
+    border-block-start: var(--style-border-width) solid var(--color-border);
+    padding-block-start: var(--padding-2xl);
+  }
+
+  .cart-drawer__summary .cart-note {
+    @media screen and (min-width: 750px) {
+      margin-block-start: var(--margin-3xs);
+    }
+  }
+
+  .cart-drawer__heading--empty {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cart-drawer__items {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+
+  .cart-drawer__items .cart-items__table-row:last-child {
+    border-bottom: none;
+    padding-block-end: 0;
+    margin-block-end: 0;
+  }
+
+  .cart-drawer--empty .cart-drawer__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100dvh;
+    margin-top: 0;
+  }
+
+  .cart-drawer:not(:has(.cart-form)) .cart-drawer__content {
+    justify-content: center;
+  }
+  .cart-drawer .cart-items__table-row--full-width-variants .cart-items__product-info a, 
+  .cart-drawer .cart-items__table-row--full-width-variants .cart-items__product-info a:hover {
+    color: inherit;
+  }
+  .cart-drawer__header {
+    background-color: var(--color-background);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: var(--style-border-width) solid none;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+  }
+
+  @media screen and (min-width: 1200px) {
+    .cart-drawer__items{
+      padding:0 3vw;
+    }
+    .cart-drawer__header {
+      padding:3vw;
+    }
+    .cart-actions summary{
+      padding: 1vw 0;
+    }
+    .cart-discount__content {
+      margin-bottom: 1vw;
+    }
+    
+  }
+  @media screen and (max-width: 1200px) and (min-width:992px) {
+    .cart-drawer__items{
+      padding:0 3vw;
+    }
+    .cart-drawer__header {
+      padding:3vw;
+    }
+    .cart-actions summary{
+      padding: 1vw 0;
+    }
+    .cart-discount__content {
+      margin-bottom: 1vw;
+    }
+  }
+  @media screen and (max-width: 992px) and (min-width:768px) {
+    .cart-drawer__items{
+      padding:0 4vw;
+    }
+    .cart-drawer__header {
+      padding:4vw;
+    }
+    .cart-actions summary{
+      padding: 2vw 0;
+    }
+    .cart-discount__content {
+      margin-bottom: 1vw;
+    }
+  }
+  @media screen and (max-width: 768px) and (min-width:576px) {
+    .cart-drawer__items{
+      padding:0 5vw;
+    }
+    .cart-drawer__header {
+      padding:5vw;
+    }
+    .cart-actions summary{
+      padding: 2vw 0;
+    }
+    .cart-discount__content {
+      margin-bottom: 1vw;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    .cart-drawer__items{
+      padding:0 5vw;
+    }
+    .cart-drawer__header {
+      padding:5vw;
+    }
+    .cart-actions summary{
+      padding: 2vw 0;
+    }
+    .cart-discount__content {
+      margin-bottom: 1vw;
+    }
+  }
+  .cart-drawer--empty .cart-drawer__header {
+    justify-content: right;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .cart-drawer--empty .cart-drawer__heading {
+    text-align: center;
+  }
+
+  header-actions {
+    display: flex;
+
+    @media screen and (max-width: 749px) {
+      justify-self: flex-end;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .header-actions--text {
+      gap: var(--gap-xl);
+    }
+
+    .header-actions__text-style {
+      font-size: var(--header-actions-font-size);
+      font-family: var(--header-actions-font-family);
+      font-weight: var(--header-actions-font-weight);
+      text-transform: var(--header-actions-text-case);
+    }
+  }
+
+  #header-component[data-menu-style='drawer'] header-actions {
+    justify-self: flex-end;
+  }
+
+  .header-actions__cart-icon {
+    --cart-bubble-size: 20px;
+    --cart-bubble-top: 4.5px;
+    --cart-bubble-right: 2.5px;
+
+    position: relative;
+  }
+
+
+  @media screen and (min-width: 750px) {
+  }
+
+  .cart-drawer__heading .cart-bubble {
+    width: fit-content;
+    border-radius: var(--style-border-radius-buttons-primary);
+    aspect-ratio: auto;
+    padding: var(--cart-padding);
+  }
+
+  .cart-drawer__heading .cart-bubble[data-maintain-ratio] {
+    width: min(1lh, 22px);
+    height: min(1lh, 22px);
+  }
+
+
+
+  .cart-drawer__heading .cart-bubble .cart-bubble__background {
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+  }
+
+  .cart-drawer__heading .cart-bubble__text {
+    color: var(--color-foreground);
+    font-size: clamp(var(--font-size--3xs), 0.75em, var(--font-size--xs));
+  }
+
+  .cart-bubble.cart-bubble--animating .cart-bubble__background {
+    animation: grow var(--animation-speed) var(--animation-easing);
+  }
+
+  .cart-bubble--animating .cart-bubble__text {
+    --start-y: -1em;
+    --start-opacity: 1;
+    /* Set initial transform state before animation starts */
+    transform: translate(0, var(--start-y, -1em));
+    opacity: var(--start-opacity, 1);
+    animation: move-and-fade var(--animation-speed) var(--animation-easing);
+  }
+
+  cart-icon:has(.cart-bubble__text-count:empty) {
+    --cart-bubble-size: 10px;
+    --cart-bubble-top: 9px;
+    --cart-bubble-right: 9px;
+
+    .svg-wrapper {
+      --cart-bubble-top: 4px;
+      --cart-bubble-right: 4px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    cart-icon.header-actions__cart-icon--text:has(.cart-bubble__text-count:empty) {
+      --cart-bubble-right: 2.5px;
+    }
+  }
+
+  @media screen and (prefers-reduced-motion: no-preference) {
+    html:active-view-transition-type(empty-cart-drawer) {
+      .cart-drawer__close-button {
+        view-transition-name: cart-drawer-close-button;
+      }
+    }
+  }
+
+  :active-view-transition {
+    .cart-drawer__header,
+    .cart-drawer__content {
+      background: transparent;
+    }
+  }
+
+  ::view-transition-old(cart-drawer-content) {
+    transform-origin: 50% 33%;
+    animation: cart-contents-old var(--spring-d280-b0-duration) var(--spring-d280-b0-easing) forwards;
+  }
+
+  ::view-transition-new(cart-drawer-content) {
+    transform-origin: top center;
+    animation: cart-contents-new var(--spring-d280-b0-duration) var(--spring-d280-b0-easing) forwards;
+  }
+
+  @keyframes cart-contents-old {
+    to {
+      scale: 0.92;
+      opacity: 0;
+    }
+  }
+
+  @keyframes cart-contents-new {
+    from {
+      scale: 1.05;
+      translate: 0 128px;
+      filter: blur(1px);
+      opacity: 0;
+    }
+  }
+  .header-actions__text {
+    display: flex;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .header-actions__cart-icon--text {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-xs);
+    }
+
+    .header__column--right .header-actions--text {
+      margin-inline-start: 0;
+    }
+  }
+{% endstylesheet %}

@@ -1,0 +1,184 @@
+<section class="affiliate-v" id="affiliate">
+  <div class="in-affiliate container-i">
+    <div class="flex-i" >
+
+      <div class="item-affiliate item-affiliate-content w-12 w-md-5">
+        <div class="in-item-affiliate">
+          {% if section.settings.heading != blank %}
+            <div class="he-m fw-extrablack">
+              <h2>{{ section.settings.heading }}</h2>
+            </div>
+          {% endif %}
+
+          {% if section.settings.text != blank %}
+            <div class="bo-m">
+              <p>{{ section.settings.text }}</p>
+            </div>
+          {% endif %}
+
+          <div class="media-affiliate">
+            <div class="media-affiliate-bars">
+
+              {% if section.settings.image_1 != blank %}
+                <figure class="bar bar-1">
+                  {{
+                    section.settings.image_1
+                    | image_url: width: 800
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '320, 480, 640, 800',
+                      alt: 'bar 1'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.image_2 != blank %}
+                <figure class="bar bar-2">
+                  {{
+                    section.settings.image_2
+                    | image_url: width: 800
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '320, 480, 640, 800',
+                      alt: 'bar 2'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.image_3 != blank %}
+                <figure class="bar bar-3">
+                  {{
+                    section.settings.image_3
+                    | image_url: width: 800
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '320, 480, 640, 800',
+                      alt: 'bar 3'
+                  }}
+                </figure>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-affiliate item-affiliate-form w-12 w-md-7">
+        <div class="in-item-affiliate">
+          {% form 'contact', class: 'form-affiliate' %}
+            <input type="hidden" name="contact[form_type]" value="Affiliate application">
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="AffiliateName-{{ section.id }}">Name <strong>*</strong></label>
+              <input class="bo-xs" id="AffiliateName-{{ section.id }}" type="text" name="contact[name]" placeholder="John">
+            </div>
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="AffiliateEmail-{{ section.id }}">Email <strong>*</strong></label>
+              <input class="bo-xs" id="AffiliateEmail-{{ section.id }}" type="email" name="contact[email]" placeholder="name@gmail.com" required>
+            </div>
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="AffiliateSocial-{{ section.id }}">Social handle or website <strong>*</strong></label>
+              <input class="bo-xs" id="AffiliateSocial-{{ section.id }}" type="text" name="contact[social_handle_or_website]" placeholder="@yourhandle or yourwebsite.com" required>
+            </div>
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="AffiliateMessage-{{ section.id }}">Tell us more about you <strong>*</strong></label>
+              <textarea class="bo-xs" id="AffiliateMessage-{{ section.id }}" name="contact[body]" placeholder="Share your story, why you're interested in partnering with JustNosh, and how you plan to share JustNosh with your audience." required></textarea>
+            </div>
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="AffiliateCode-{{ section.id }}">Preferred coupon code (optional)</label>
+              <input class="bo-xs" id="AffiliateCode-{{ section.id }}" type="text" name="contact[preferred_coupon_code]" placeholder="Your preferred code">
+            </div>
+
+            <div class="action-affiliate w-12">
+              <div class="bo-s fw-medium text-inidication">
+                <p><span>*</span> Indicates a required field </p>
+              </div>
+              {% if form.posted_successfully? %}
+                <div class="form-success-message">
+                  <span class="form-success-message__text bo-s uppercase">
+                    Thank you! Your message has been sent successfully. We'll get back to you as soon as possible.
+                  </span>
+                </div>
+              {% else %}
+                <button type="submit" class="btn-i btn-pink-ii w-12">
+                  <span>{{ section.settings.button_label }}</span>
+                </button>
+              {% endif %}
+            </div>
+
+            {% if section.settings.email_note != blank %}
+              <div class="bo-xs note-affiliate">
+                <div>{{ section.settings.email_note }}</div>
+              </div>
+            {% endif %}
+          {% endform %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Affiliate V",
+  "tag": "section",
+  "class": "section-affiliate-vi",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "APPLY TO BECOME AN AFFILIATE"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We review every application and will be in touch."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Bar image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Bar image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Bar image 3"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "JustNosh protein bars"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SUBMIT APPLICATION"
+    },
+    {
+      "type": "richtext",
+      "id": "email_note",
+      "label": "Email note",
+      "default": "<p>Or email us directly at hello@japrovisions.com</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Affiliate VI"
+    }
+  ]
+}
+{% endschema %}

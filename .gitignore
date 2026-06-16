@@ -1,0 +1,43 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+
+# Shopify CLI
+shopify.theme.toml
+
+# Temporary files
+tmp/
+temp/
+
+# Cursor
+.cursor/
+
+# Build files
+dist/
+build/
+
+# Mac
+.AppleDouble
+.LSOverride
+
+# Windows
+ehthumbs.db
+
+# Archive files
+*.zip

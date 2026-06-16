@@ -1,0 +1,66 @@
+<section class="locator-i">
+  <div class="in-locator container-i-fix">
+
+    <div class="head-locator">
+      {% if section.settings.heading != blank %}
+        <div class="he-m fw-extrablack">
+          <h1>
+            {{ section.settings.heading }}
+          </h1>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="body-locator">
+      <div class="locator-widget-shell" data-lenis-prevent>
+
+        <!-- Stockist widget -->
+        <stockist-store-locator
+          data-stockist-widget-tag="{{ section.settings.stockist_widget_tag }}"
+        >
+          Loading store locator from
+          <a href="https://stockist.co">Stockist store locator</a>...
+        </stockist-store-locator>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% if section.settings.load_stockist_script %}
+  <script async src="https://stockist.co/embed/v1/widget.min.js"></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Locator I",
+  "tag": "section",
+  "class": "section-locator-i",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FIND JUSTNOSH NEAR YOU"
+    },
+    {
+      "type": "text",
+      "id": "stockist_widget_tag",
+      "label": "Stockist widget tag",
+      "default": "map_r3mn7jvq"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_stockist_script",
+      "label": "Load Stockist script",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Locator I"
+    }
+  ]
+}
+{% endschema %}

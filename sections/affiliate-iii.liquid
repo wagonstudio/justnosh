@@ -1,0 +1,117 @@
+<section class="affiliate-iii">
+  <div class="in-affiliate container-i">
+
+    <div class="head-affiliate">
+      {% if section.settings.heading != blank %}
+        <div class="he-m fw-extrablack">
+          <h2>
+            {{ section.settings.heading }}
+          </h2>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="body-affiliate">
+        <div class="flex-i">
+
+          {% for block in section.blocks %}
+            <div class="item-affiliate w-12 w-md-6 w-lg-3" {{ block.shopify_attributes }}>
+              <div class="in-item-affiliate">
+
+                {% if block.settings.icon != blank %}
+                  <div class="media-affiliate">
+                    {{
+                      block.settings.icon
+                      | image_url: width: 160
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '80, 120, 160',
+                        alt: block.settings.text | escape
+                    }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="bo-m fw-medium">
+                    <p>{{ block.settings.text }}</p>
+                  </div>
+                {% endif %}
+
+              </div>
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Affiliate III",
+  "tag": "section",
+  "class": "section-affiliate-iii",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WHY PARTNER WITH JUSTNOSH"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "A clean ingredient food brand built on transparency, quality, and real ingredients"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Affiliate I",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "text": "A clean ingredient food brand built on transparency, quality, and real ingredients"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Strong appeal to health-conscious audiences"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Easy to recommend, share, and integrate into your content or practice"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Built by a founder who prioritizes transparency and quality"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

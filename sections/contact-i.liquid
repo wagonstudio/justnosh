@@ -1,0 +1,125 @@
+<section class="contact-i">
+  <div class="in-contact container-i">
+
+    <div class="head-contact">
+      {% if section.settings.heading != blank %}
+        <div class="he-m fw-extrablack">
+          <h2>
+            {{ section.settings.heading }}
+          </h2>
+        </div>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="bo-m">
+          <p>{{ section.settings.subheading }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="body-contact">
+      <div class="item-contact w-12">
+        <div class="in-item-contact">
+          {% form 'contact', class: 'form-contact' %}
+            <input type="hidden" name="contact[form_success_id]" value="contact-i-{{ section.id }}">
+            <input type="hidden" name="contact[form_type]" value="Contact request">
+
+            <!-- NAME -->
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="ContactName-{{ section.id }}">Name <strong>*</strong></label>
+              <input class="bo-xs" id="ContactName-{{ section.id }}" type="text" name="contact[name]" placeholder="John">
+            </div>
+
+            <!-- EMAIL -->
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="ContactEmail-{{ section.id }}">Email <strong>*</strong></label>
+              <input class="bo-xs" id="ContactEmail-{{ section.id }}" type="email" name="contact[email]" placeholder="name@gmail.com" required>
+            </div>
+
+            <!-- SUBJECT -->
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="ContactSubject-{{ section.id }}">Subject <strong>*</strong></label>
+              <input class="bo-xs" id="ContactSubject-{{ section.id }}" type="text" name="contact[subject]" placeholder="Tell us your request (order, delivery, stores...)" required>
+            </div>
+
+            <!-- MESSAGE -->
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="ContactMessage-{{ section.id }}">Message <strong>*</strong></label>
+              <textarea class="bo-xs" id="ContactMessage-{{ section.id }}" name="contact[body]" placeholder="Share your message..." required></textarea>
+            </div>
+
+            <div class="bo-s fw-medium text-inidication">
+              <p><span>*</span> Indicates a required field </p>
+            </div>
+            <!-- BUTTON -->
+            <div
+              class="action-affiliate w-12"
+              data-form-success-wrapper
+              data-form-success-id="contact-i-{{ section.id }}"
+              data-form-posted="{% if form.posted_successfully? %}true{% else %}false{% endif %}"
+            >
+              <button type="submit" class="btn-i btn-pink-ii w-12" data-form-submit-button>
+                <span>{{ section.settings.button_label }}</span>
+              </button>
+
+              <div class="form-success-message" data-form-success-message hidden>
+                <span class="form-success-message__text bo-s">
+                  Thank you! Your message has been sent successfully. We'll get back to you as soon as possible.
+                </span>
+              </div>
+            </div>
+
+            <!-- NOTE -->
+            {% if section.settings.email_note != blank %}
+              <div class="bo-xs note-affiliate">
+                <div>{{ section.settings.email_note }}</div>
+              </div>
+            {% endif %}
+
+          {% endform %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact I",
+  "tag": "section",
+  "class": "section-contact-i",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We're here to help. Have questions or feedback? Let us know."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "richtext",
+      "id": "email_note",
+      "label": "Email note",
+      "default": "<p>Prefer email? Reach us at info@jagprovisions.com</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact I"
+    }
+  ]
+}
+{% endschema %}

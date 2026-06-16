@@ -1,0 +1,286 @@
+<div class="superhero-i">
+  <div class="container-i">
+    <div class="flex-i gap-i">
+      <div class="base-i-1">
+        <div class="inbase">
+          <div class="base-head">
+            {% if section.settings.heading != blank %}
+              <div class="he-l fw-medium uppercase">
+                {{ section.settings.heading }}
+              </div>
+            {% endif %}
+
+            {% if section.settings.text != blank %}
+              <div class="bo-m">
+                <p>{{ section.settings.text }}</p>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+            <div class="base-actions">
+              <a href="{{ section.settings.button_link }}" class="btn-i btn-pink-i">
+                <span>{{ section.settings.button_label }}</span>
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="bg">
+    <div class="flex-i gap-i">
+      
+      <div class="base-i-1"></div>
+      <div class="base-i-2">
+        <div class="inbase">
+          {% if section.settings.media_type == 'image' %}
+            <div class="media">
+              {% if section.settings.bar_1 != blank %}
+                <figure class="bar-1">
+                  {{
+                    section.settings.bar_1
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Bar 1'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.bar_2 != blank %}
+                <figure class="bar-2">
+                  {{
+                    section.settings.bar_2
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Bar 2'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.bar_3 != blank %}
+                <figure class="bar-3">
+                  {{
+                    section.settings.bar_3
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Bar 3'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.chocolate_1 != blank %}
+                <figure class="chocolate-1">
+                  {{
+                    section.settings.chocolate_1
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Chocolate 1'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.chocolate_2 != blank %}
+                <figure class="chocolate-2">
+                  {{
+                    section.settings.chocolate_2
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Chocolate 2'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.chocolate_3 != blank %}
+                <figure class="chocolate-3">
+                  {{
+                    section.settings.chocolate_3
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Chocolate 3'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.chocolate_4 != blank %}
+                <figure class="chocolate-4">
+                  {{
+                    section.settings.chocolate_4
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Chocolate 4'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.chocolate_5 != blank %}
+                <figure class="chocolate-5">
+                  {{
+                    section.settings.chocolate_5
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Chocolate 5'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.peanut_1 != blank %}
+                <figure class="peanut-1">
+                  {{
+                    section.settings.peanut_1
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Peanut 1'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.peanut_2 != blank %}
+                <figure class="peanut-2">
+                  {{
+                    section.settings.peanut_2
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Peanut 2'
+                  }}
+                </figure>
+              {% endif %}
+
+              {% if section.settings.lemon_1 != blank %}
+                <figure class="lemon-1">
+                  {{
+                    section.settings.lemon_1
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', alt: 'Lemon 1'
+                  }}
+                </figure>
+              {% endif %}
+            </div>
+
+          {% elsif section.settings.media_type == 'video' %}
+            {% if section.settings.video != blank %}
+              <div class="superhero-media superhero-media--video">
+                {{
+                  section.settings.video
+                  | video_tag:
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    controls: false,
+                    playsinline: true
+                }}
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Superhero",
+  "tag": "section",
+  "class": "section-superhero",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Title",
+      "default": "<h1>Protein Bars Made For <strong>Ingredient-Obsessed People</strong></h1>"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We believe in fueling you with clean ingredients and high protein in every bite"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button text",
+      "default": "Shop bars"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "Image composition" },
+        { "value": "video", "label": "Video" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image composition"
+    },
+    {
+      "type": "image_picker",
+      "id": "bar_1",
+      "label": "Bar 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "bar_2",
+      "label": "Bar 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "bar_3",
+      "label": "Bar 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "chocolate_1",
+      "label": "Chocolate 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "chocolate_2",
+      "label": "Chocolate 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "chocolate_3",
+      "label": "Chocolate 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "chocolate_4",
+      "label": "Chocolate 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "chocolate_5",
+      "label": "Chocolate 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "peanut_1",
+      "label": "Peanut 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "peanut_2",
+      "label": "Peanut 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "lemon_1",
+      "label": "Lemon 1"
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Superhero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,261 @@
+<script
+  src="{{ 'product-recommendations.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+{% liquid
+  assign current_product = product
+  assign target_product = section.settings.product
+
+  if target_product == blank
+    assign target_product = current_product
+  endif
+
+  assign recommendation_type = section.settings.recommendation_type
+  assign max_products = 3
+%}
+
+{% render 'quick-add-styles' %}
+{% render 'quick-add-modal-styles' %}
+{% render 'product-badges-styles' %}
+
+<product-recommendations
+  id="pdp-recommendations-{{ section.id }}"
+  class="pdp-recommendations"
+  data-url="{{ routes.product_recommendations_url }}?limit=3"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ target_product.id }}"
+  data-intent="{{ recommendation_type }}"
+  data-recommendations-performed="{{ recommendations.performed }}"
+  data-hydration-key="pdp-recommendations-{{ section.id }}"
+  {{ section.shopify_attributes }}
+>
+  <section class="shopping-i pdp-recommendations-i">
+    <div class="in-shopping in-pdp-recommendations container-i">
+      <div class="head-shopping head-pdp-recommendations">
+        {% if section.settings.heading != blank %}
+          <div class="he-m fw-extrablack uppercase">
+            <h2>{{ section.settings.heading }}</h2>
+          </div>
+        {% endif %}
+
+      </div>
+
+      {%- if recommendations.performed or target_product == blank -%}
+        {% liquid
+          if target_product == blank
+            assign products = null
+            for i in (1..max_products)
+              assign products = products | append: ', '
+              assign products = products | split: ','
+            endfor
+          elsif recommendations.performed and recommendations.products_count == 0
+            if recommendation_type == 'related'
+              assign products = collections.all.products | reject: 'id', target_product.id
+            elsif recommendation_type == 'complementary'
+              assign products = null
+            endif
+          else
+            assign products = recommendations.products
+          endif
+        %}
+
+        {% if products != blank and products.size > 0 %}
+          <div class="body-shopping body-pdp-recommendations">
+            <div class="flex-i">
+              {% for product in products limit: max_products %}
+                <div class="item-shopping item-pdp-recommendation">
+                  <div class="in-item-shopping">
+                    {% assign product_bars = product.metafields.custom.bars.value %}
+
+                    {% if product_bars != blank %}
+                      <div class="tag-shopping">
+                        <div class="tag-i sp-s uppercase fw-semibold">
+                          <span>{{ product_bars }}</span>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    <div class="media-shopping">
+                      <a href="{{ product.url }}">
+                        {% if product.featured_image != blank %}
+                          {{
+                            product.featured_image
+                            | image_url: width: 900
+                            | image_tag:
+                              loading: 'lazy',
+                              widths: '320, 480, 640, 900',
+                              alt: product.featured_image.alt | default: product.title
+                          }}
+                        {% endif %}
+
+                        {% assign shopping_media = product.metafields.custom.shopping_media.value %}
+
+                        {% if shopping_media != blank %}
+                          <div class="media-metafield media-count-{{ shopping_media.size }}">
+                            {% for media in shopping_media limit: 4 %}
+                              <figure class="media-{{ forloop.index }}">
+                                {{
+                                  media
+                                  | image_url: width: 500
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '120, 180, 240, 320, 500',
+                                    alt: media.alt | default: product.title
+                                }}
+                              </figure>
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </a>
+                    </div>
+
+                    <div class="data-shopping">
+                      <div class="title-shopping">
+                        <a href="{{ product.url }}" class="he-s fw-extrablack uppercase">
+                          {{ product.title }}
+                        </a>
+                      </div>
+
+                      <div class="price-shopping">
+                        <div class="sp-s fw-semibold uppercase">
+                          <p>{{ product.price | money }}</p>
+                        </div>
+                      </div>
+
+                      <div class="action-shopping">
+                        <a href="{{ product.url }}" class="btn-i btn-pink-ii">
+                          <span>{{ section.settings.button_label }}</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="body-shopping body-pdp-recommendations">
+            <div class="bo-m">
+              <p>No recommended products found.</p>
+            </div>
+          </div>
+        {% endif %}
+      {%- else -%}
+        <div class="body-shopping body-pdp-recommendations">
+          <div class="flex-i">
+            {% for i in (1..max_products) %}
+              <div
+                class="item-shopping item-pdp-recommendation product-recommendations__skeleton-item"
+                aria-label="{{ 'accessibility.loading_product_recommendations' | t }}"
+              ></div>
+            {% endfor %}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+</product-recommendations>
+<script>
+  (() => {
+    const sectionId = '{{ section.id }}';
+    const root = document.getElementById(`pdp-recommendations-${sectionId}`);
+
+    if (!root) return;
+
+    const revealRecommendations = () => {
+      const items = root.querySelectorAll('.item-pdp-recommendation');
+
+      items.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(1.5vw)';
+
+        setTimeout(() => {
+          item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        }, index * 120);
+      });
+    };
+
+    const observer = new MutationObserver(() => {
+      revealRecommendations();
+    });
+
+    observer.observe(root, {
+      childList: true,
+      subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', revealRecommendations);
+    window.addEventListener('load', revealRecommendations);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "PDP Recommendations",
+  "tag": "section",
+  "class": "section-pdp-recommendations",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore other fLAvors"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "select",
+      "id": "recommendation_type",
+      "label": "Recommendation type",
+      "options": [
+        {
+          "value": "related",
+          "label": "Related"
+        },
+        {
+          "value": "complementary",
+          "label": "Complementary"
+        }
+      ],
+      "default": "related"
+    },
+    {
+      "type": "select",
+      "id": "products_limit",
+      "label": "Products to show",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "12 BARS"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SHOP FLAVOR"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Recommendations"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,224 @@
+
+<section class="contact-ii">
+  <div class="in-contact">
+
+    <div class="wrap-contact">
+
+      {% if section.settings.image_1 != blank %}
+        <figure class="decor-contact decor-contact-1">
+          {{
+            section.settings.image_1
+            | image_url: width: 420
+            | image_tag:
+              loading: 'lazy',
+              widths: '160, 240, 320, 420',
+              alt: section.settings.image_1_alt | default: section.settings.heading
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.image_2 != blank %}
+        <figure class="decor-contact decor-contact-2">
+          {{
+            section.settings.image_2
+            | image_url: width: 420
+            | image_tag:
+              loading: 'lazy',
+              widths: '160, 240, 320, 420',
+              alt: section.settings.image_2_alt | default: section.settings.heading
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.image_3 != blank %}
+        <figure class="decor-contact decor-contact-3">
+          {{
+            section.settings.image_3
+            | image_url: width: 420
+            | image_tag:
+              loading: 'lazy',
+              widths: '160, 240, 320, 420',
+              alt: section.settings.image_3_alt | default: section.settings.heading
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.image_4 != blank %}
+        <figure class="decor-contact decor-contact-4">
+          {{
+            section.settings.image_4
+            | image_url: width: 420
+            | image_tag:
+              loading: 'lazy',
+              widths: '160, 240, 320, 420',
+              alt: section.settings.image_4_alt | default: section.settings.heading
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.image_5 != blank %}
+        <figure class="decor-contact decor-contact-5">
+          {{
+            section.settings.image_5
+            | image_url: width: 420
+            | image_tag:
+              loading: 'lazy',
+              widths: '160, 240, 320, 420',
+              alt: section.settings.image_5_alt | default: section.settings.heading
+          }}
+        </figure>
+      {% endif %}
+
+      <div class="head-contact">
+        {% if section.settings.heading != blank %}
+          <div class="he-m fw-extrablack">
+            <h2>
+              {{ section.settings.heading }}
+            </h2>
+          </div>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="bo-m">
+            <p>{{ section.settings.text }}</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="body-contact">
+        {% form 'contact', class: 'form-contact' %}
+          <input type="hidden" name="contact[form_success_id]" value="contact-ii-{{ section.id }}">
+          <input type="hidden" name="contact[form_type]" value="Newsletter signup">
+          <input type="hidden" name="contact[category]" value="Exclusive offers and product updates">
+
+          <div class="flex-i align-end-i">
+            <div class="field-affiliate w-12 w-lg-4">
+              <label class="bo-m uppercase" for="ContactNewsletterName-{{ section.id }}">Name</label>
+              <input
+                class="bo-xs"
+                id="ContactNewsletterName-{{ section.id }}"
+                type="text"
+                name="contact[name]"
+                placeholder="John"
+              >
+            </div>
+
+            <div class="field-affiliate w-12 w-lg-4">
+              <label class="bo-m uppercase" for="ContactNewsletterEmail-{{ section.id }}">Email</label>
+              <input
+                class="bo-xs"
+                id="ContactNewsletterEmail-{{ section.id }}"
+                type="email"
+                name="contact[email]"
+                placeholder="name@gmail.com"
+                required
+              >
+            </div>
+
+            <div
+              class="action-affiliate w-12 w-lg-4"
+              data-form-success-wrapper
+              data-form-success-id="contact-ii-{{ section.id }}"
+              data-form-posted="{% if form.posted_successfully? %}true{% else %}false{% endif %}"
+            >
+              <button type="submit" class="btn-i btn-pink-ii w-12" data-form-submit-button>
+                <span>{{ section.settings.button_label }}</span>
+              </button>
+
+              <div class="form-success-message" data-form-success-message hidden>
+                <span class="form-success-message__text bo-s uppercase">
+                  Successfully subscribed.
+                </span>
+              </div>
+            </div>
+          </div>
+        {% endform %}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact II",
+  "tag": "section",
+  "class": "section-contact-ii",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WANT EXCLUSIVE OFFERS AND PRODUCT UPDATES?"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Unsubscribe anytime."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Decor image 1"
+    },
+    {
+      "type": "text",
+      "id": "image_1_alt",
+      "label": "Decor image 1 alt"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Decor image 2"
+    },
+    {
+      "type": "text",
+      "id": "image_2_alt",
+      "label": "Decor image 2 alt"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Decor image 3"
+    },
+    {
+      "type": "text",
+      "id": "image_3_alt",
+      "label": "Decor image 3 alt"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Decor image 4"
+    },
+    {
+      "type": "text",
+      "id": "image_4_alt",
+      "label": "Decor image 4 alt"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Decor image 5"
+    },
+    {
+      "type": "text",
+      "id": "image_5_alt",
+      "label": "Decor image 5 alt"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact II"
+    }
+  ]
+}
+{% endschema %}

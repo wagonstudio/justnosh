@@ -1,0 +1,111 @@
+<section class="about-v">
+  <div class="in-about container-ii">
+    <div class="flex-i">
+
+      <!-- LEFT -->
+      <div class="item-about item-about-content w-12 w-md-7">
+        <div class="in-item-about">
+
+          {% if section.settings.heading != blank %}
+            <div class="he-m fw-extrablack">
+              <h2>{{ section.settings.heading }}</h2>
+            </div>
+          {% endif %}
+
+          {% if section.settings.text != blank %}
+            <div class="bo-s">
+              {{ section.settings.text }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.highlight != blank %}
+            <div class="bo-s fw-semibold">
+              <p>{{ section.settings.highlight }}</p>
+            </div>
+          {% endif %}
+
+          {% if section.settings.signature != blank %}
+            <div class="sp-s fw-semibold uppercase">
+              <span>{{ section.settings.signature }}</span>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="item-about item-about-media w-12 w-md-5 ">
+        <div class="in-item-about">
+
+          {% if section.settings.image != blank %}
+            {% assign image_alt = section.settings.image_alt | default: section.settings.heading %}
+
+            <figure class="media-about">
+              {{
+                section.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '480, 720, 960, 1200',
+                  alt: image_alt,
+                  data-parallax: '-0.08'
+              }}
+            </figure>
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About V",
+  "tag": "section",
+  "class": "section-about-v",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "OUR STORY"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Main text",
+      "default": "<p>Protein bars have always been part of my everyday. I love the convenience, the structure, and the role they play in supporting my health goals, but I struggled to find options that actually felt good to eat.</p><p>I created JustNosh to change that. What started as a collagen-forward, easy-to-digest protein bar quickly became something more. A brand rooted in ingredient quality, transparency, and respect for how food impacts the body.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "highlight",
+      "label": "Highlight text",
+      "default": "Beyond creating better products, my mission is to empower people to understand what they're eating and why it matters. Food isn't just fuel. It's information."
+    },
+    {
+      "type": "text",
+      "id": "signature",
+      "label": "Signature",
+      "default": "JENNIFER NEWMAN, FOUNDER"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Founder image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About V"
+    }
+  ]
+}
+{% endschema %}

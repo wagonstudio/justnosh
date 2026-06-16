@@ -1,0 +1,67 @@
+<section class="affiliate-i">
+  <div class="in-affiliate container-iii">
+
+    <div class="head-affiliate">
+
+      {% if section.settings.heading != blank %}
+        <div class="he-l">
+          <div>{{ section.settings.heading }}</div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <div class="bo-m">
+          <div>{{ section.settings.text }}</div>
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <div class="action-affiliate">
+          <a href="{{ section.settings.button_link }}" class="btn-i btn-pink-ii" data-anim="fade-up">
+            <span>{{ section.settings.button_label }}</span>
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Affiliate",
+  "tag": "section",
+  "class": "section-affiliate-i",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<h1>PARTNER WITH A BRAND BUILT FOR INGREDIENT-OBSESSED PEOPLE</h1>"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>We work with creators and professionals who genuinely care about what goes into the products they recommend</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "BECOME AN AFFILIATE"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Affiliate"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,697 @@
+{% liquid
+  assign current_product = product
+  assign current_variant = current_product.selected_or_first_available_variant
+  assign selected_variant_media = current_variant.featured_media
+  assign featured_media = selected_variant_media | default: current_product.featured_media | default: current_product.media.first
+
+  assign intro_text = current_product.metafields.custom.pdp_intro.value | default: current_product.description | strip_html
+  assign flavor_profile_title = current_product.metafields.custom.flavor_profile_title.value
+  assign flavor_profile_text = current_product.metafields.custom.flavor_profile_text.value
+  assign price_suffix_label = current_product.metafields.custom.price_suffix_label.value
+
+  assign highlight_list = current_product.metafields.custom.pdp_highlights.value
+  assign color_primary = current_product.metafields.custom.color_primary.value
+  assign color_secondary = current_product.metafields.custom.color_secondary.value
+  assign color_tertiary = current_product.metafields.custom.color_tertiary.value
+  assign color_tertiary_contrast = current_product.metafields.custom.color_tertiary_contrast
+  assign color_light = current_product.metafields.custom.color_light.value
+
+  assign sorted_media = '' | split: ','
+
+  if selected_variant_media
+    assign sorted_media = sorted_media | concat: current_product.media | where: 'id', selected_variant_media.id
+
+    for media in current_product.media
+      if media.id != selected_variant_media.id
+        assign found_media = current_product.media | where: 'id', media.id
+        assign sorted_media = sorted_media | concat: found_media
+      endif
+    endfor
+  else
+    assign sorted_media = current_product.media
+  endif
+
+  assign media_sizes = '(min-width: 1200px) 48vw, (min-width: 750px) 50vw, 100vw'
+%}
+
+{% comment %}
+  {%- if section.settings.enable_zoom -%}
+    <script src="{{ 'zoom-dialog.js' | asset_url }}" type="module"></script>
+  {%- endif -%}
+
+  {%- assign has_image_drop = sorted_media | has: 'media_type', 'image' -%}
+  {%- if has_image_drop and section.settings.enable_zoom -%}
+    <script src="{{ 'drag-zoom-wrapper.js' | asset_url }}" type="module"></script>
+  {%- endif -%}
+
+{% endcomment %}
+
+<section 
+  class="pdp-i" 
+  id="pdp-i-{{ section.id }}" 
+  {% if color_primary != blank %}
+    style="--color-pdp-primary: {{ color_primary }};"
+  {% endif %}
+>
+  <div class="in-pdp container-i">
+    <div class="flex-i">
+      <div class="item-pdp-i item-pdp-i-media w-12 w-lg-6">
+        <div class="media-pdp-i" data-anim="stagger"  data-stagger= "0.5"  data-stagger-y="80">
+
+          <div class="splide pdp-main-splide" id="pdp-main-splide-{{ section.id }}" aria-label="{{ current_product.title | escape }}">
+            <div class="splide__track">
+              <ul class="splide__list">
+                {% for media in sorted_media offset: 1 %}
+                  <li
+                    class="splide__slide"
+                    data-media-id="{{ media.id }}"
+                    {% if featured_media and media.id == featured_media.id %}data-featured="true"{% endif %}
+                  >
+
+                    <div
+                      class="product-media-container product-media-container--{{ media.media_type }}"
+                      style="{% if media.preview_image %}--media-preview-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};{% endif %}"
+                    >
+                      {% render 'product-media',
+                        media: media,
+                        sizes: media_sizes,
+                        is_main_product_media: forloop.first
+                      %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <div class="thumbs-pdp-i">
+            <div class="splide pdp-thumbs-splide" id="pdp-thumbs-splide-{{ section.id }}" aria-label="{{ current_product.title | escape }} thumbnails">
+              <div class="splide__track">
+                <ul class="splide__list">
+                  {% for media in sorted_media  offset: 1 %}
+                    <li class="splide__slide" data-media-id="{{ media.id }}">
+                      <button
+                        type="button"
+                        class="thumb-pdp-i"
+                        aria-label="{{ current_product.title | escape }} thumbnail {{ forloop.index }}"
+                      >
+                        {{
+                          media.preview_image
+                          | image_url: width: 320
+                          | image_tag:
+                            loading: 'lazy',
+                            widths: '120, 180, 240, 320',
+                            class: 'img-thumb-pdp-i',
+                            alt: media.alt | default: current_product.title | escape
+                        }}
+                      </button>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-pdp-i item-pdp-i-content w-12 w-lg-6">
+        <div class="content-pdp-i" data-anim="stagger"  data-stagger= "0.2"  data-stagger-y="80">
+          <div class="head-pdp-i">
+            <div class="he-m fw-extrablack uppercase">
+              <h1>{{ current_product.title }}</h1>
+            </div>
+
+            <div class="he-xs fw-bold price-pdp-i" data-pdp-price>
+              {% if current_variant.compare_at_price > current_variant.price %}
+                <span class="price-sale-pdp-i">{{ current_variant.price | money }}</span>
+                <span class="price-compare-pdp-i"><s>{{ current_variant.compare_at_price | money }}</s></span>
+                {% if price_suffix_label != blank %}
+                  <span class="price-suffix-pdp-i"> / {{ price_suffix_label }}</span>
+                {% endif %}
+              {% else %}
+                <span class="price-regular-pdp-i">{{ current_variant.price | money }}</span>
+                {% if price_suffix_label != blank %}
+                  <span class="price-suffix-pdp-i"> / {{ price_suffix_label }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+
+            {% if intro_text != blank %}
+              <div class="bo-m fw-medium intro-pdp-i">
+                <p>{{ intro_text }}</p>
+              </div>
+            {% endif %}
+          </div>
+
+
+          {% if highlight_list != blank %}
+            <div class="benefits-pdp-i">
+              <div class="flex-i">
+                {% for item in highlight_list %}
+                  {% if item != blank %}
+                    <div class="item-benefit-pdp-i">
+                      <div class="bo-xs fw-semibold uppercase">
+                        <span>{{ item }}</span>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if flavor_profile_title != blank or flavor_profile_text != blank %}
+            <div class="profile-pdp-i">
+              <div class="flex-i">
+                {% if flavor_profile_title != blank %}
+                  <div class="item-profile-pdp-i item-profile-pdp-i-title">
+                    <div class="sp-s fw-semibold uppercase">
+                      <span>{{ flavor_profile_title }}</span>
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if flavor_profile_text != blank %}
+                  <div class="item-profile-pdp-i item-profile-pdp-i-text">
+                    <div class="bo-xs fw-regular">
+                      <p>{{ flavor_profile_text }}</p>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="purchase-pdp-i">
+            {% if current_product.variants.size > 1 %}
+              <div class="variants-pdp-i">
+                {% for option in current_product.options_with_values %}
+                  <div class="variant-group-pdp-i">
+                    <div class="sp-xxs fw-extrablack up">
+                      <span>{{ option.name }}</span>
+                    </div>
+
+                    <div class="variant-values-pdp-i">
+                      {% for value in option.values %}
+                        <label class="variant-value-pdp-i">
+                          <input
+                            type="radio"
+                            name="options[{{ option.name | escape }}]"
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}checked{% endif %}
+                            data-pdp-option-input
+                          >
+                          <span class="bo-xs">{{ value }}</span>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="actions-pdp-i">
+              {% content_for 'block',
+                type: 'buy-buttons',
+                id: 'buy-buttons',
+                closest.product: current_product
+              %}
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}
+    {% if section.settings.enable_zoom %}
+      <zoom-dialog
+        ref="zoomDialogComponent"
+        id="pdp-zoom-dialog-{{ section.id }}"
+      >
+        <dialog
+          class="dialog-zoomed-gallery__dialog"
+          ref="dialog"
+          on:keydown="/handleKeyDown"
+          scroll-lock
+        >
+          <button
+            type="button"
+            class="button button-unstyled close-button dialog-zoomed-gallery__close-button"
+            aria-label="{{ 'actions.close' | t }}"
+            data-pdp-zoom-close
+          >
+            <span class="visually-hidden">Close</span>
+            {{ 'icon-close.svg' | inline_asset_content }}
+          </button>
+
+          <div class="dialog-thumbnails-list-container">
+            <div class="dialog-thumbnails-list list-unstyled">
+              {% for media in sorted_media %}
+                <button
+                  type="button"
+                  class="button button-unstyled dialog-thumbnails-list__thumbnail"
+                  aria-label="{{ 'accessibility.scroll_to' | t: title: media.alt | default: media.media_type }}"
+                  data-pdp-zoom-thumb="{{ forloop.index0 }}"
+                  style="--aspect-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }}; --gallery-aspect-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};"
+                  {% if forloop.first %}
+                    aria-selected="true"
+                  {% endif %}
+                >
+                  {{
+                    media.preview_image
+                    | image_url: width: 1024
+                    | image_tag:
+                      loading: 'lazy',
+                      sizes: 'auto, 110, (min-width: 750px) 160',
+                      widths: '240, 352, 832, 1200',
+                      alt: media.alt
+                  }}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <ul class="dialog-zoomed-gallery list-unstyled" data-pdp-zoom-gallery>
+            {% for media in sorted_media %}
+              <li
+                class="product-media-container product-media-container--{{ media.media_type }}{% if media.media_type == 'image' %} product-media-container--zoomable{% endif %}"
+                style="{% if media.preview_image %}--media-preview-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};{% endif %}"
+                data-pdp-zoom-item="{{ forloop.index0 }}"
+                {% unless forloop.first %}hidden{% endunless %}
+              >
+                {% if media.media_type == 'image' %}
+                  <drag-zoom-wrapper class="product-media__drag-zoom-wrapper">
+                    {% render 'product-media',
+                      media: media,
+                      sizes: '100vw',
+                      loading: 'lazy',
+                      is_main_product_media: forloop.first,
+                      image_ref: 'image'
+                    %}
+                  </drag-zoom-wrapper>
+                {% else %}
+                  {% render 'product-media',
+                    media: media,
+                    sizes: '100vw',
+                    loading: 'lazy',
+                    is_main_product_media: forloop.first
+                  %}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </dialog>
+      </zoom-dialog>
+    {% endif %}
+  {% endcomment %}
+</section>
+
+
+<style>
+  section.pdp-i {
+    background: {{ color_primary }};
+    color: {{ color_tertiary }};
+  }
+  .pdp-i .profile-pdp-i {
+    background: {{ color_secondary }};
+  }
+  .pdp-i .in-pdp button.btn-add-to-cart-i {
+    background: {{ color_tertiary }};
+    color: {{ color_tertiary_contrast }};
+  }
+  section.pdp-iii .tabs-pdp-iii button.tab-pdp-iii:not(.active){
+    border-color:{{ color_tertiary }};
+    color:{{ color_tertiary }};
+  }
+  
+  body .sealsubs-container .sls-purchase-options-container .sls-option-container, 
+  body .sealsubs-container .sls-option-container, 
+  body .sealsubs-container .sls-purchase-options-container .sls-option-container.sls-active, 
+  body .sealsubs-container .sls-option-container.sls-active,
+  body .sealsubs-container .sls-purchase-options-container .sls-option-container *, 
+  body .sealsubs-container .sls-option-container *, 
+  body .sealsubs-container .sls-purchase-options-container .sls-option-container.sls-active *, 
+  body .sealsubs-container .sls-option-container.sls-active *{
+    color: {{ color_tertiary }} !important;
+    border-color: {{ color_tertiary }} !important;
+  }
+  
+  section.pdp-iii .inner-pdp-iii{
+    background: {{ color_light }};
+  }
+  section.pdp-iii .tabs-pdp-iii button.tab-pdp-iii.active{
+    background: {{ color_secondary }};
+    color: {{ color_tertiary }};
+    opacity:1 !important;
+  }
+</style>
+<script>
+  (() => {
+    const sectionId = '{{ section.id }}';
+
+    function initPdpSection() {
+      const root = document.getElementById(`pdp-i-${sectionId}`);
+      if (!root) return;
+
+      const mainEl = root.querySelector(`#pdp-main-splide-${sectionId}`);
+      const thumbsEl = root.querySelector(`#pdp-thumbs-splide-${sectionId}`);
+
+      if (!mainEl) return;
+      if (root.dataset.pdpSplideMounted === 'true') return;
+      if (!window.Splide) return false;
+
+      let mainInstance = null;
+      let thumbsInstance = null;
+
+      if (thumbsEl) {
+        thumbsInstance = new Splide(thumbsEl, {
+          type: 'loop',
+          arrows: false,
+          pagination: false,
+          isNavigation: true,
+          rewind: true,
+          drag: true,
+          gap: '1vw',
+          focus: 0,
+          fixedWidth: '7.2vw',
+          fixedHeight: '7.2vw',
+          cover: true,
+          trimSpace: false,
+          mediaQuery: 'max',
+          breakpoints: {
+            991: {
+              gap: '2vw',
+              fixedWidth: '18vw',
+              fixedHeight: '18vw'
+            },
+            767: {
+              gap: '2vw',
+              fixedWidth: '24vw',
+              fixedHeight: '24vw'
+            }
+          }
+        });
+      }
+
+      mainInstance = new Splide(mainEl, {
+        type: 'slide',
+        arrows: false,
+        pagination: false,
+        rewind: true,
+        drag: true,
+        speed: 600
+      });
+
+      if (thumbsInstance) {
+        mainInstance.sync(thumbsInstance);
+        thumbsInstance.mount();
+      }
+
+      mainInstance.mount();
+
+      const featuredIndex = Array.from(mainEl.querySelectorAll('.splide__slide')).findIndex((slide) => {
+        return slide.hasAttribute('data-featured');
+      });
+
+      if (featuredIndex > -1) {
+        mainInstance.go(featuredIndex);
+      }
+
+      root.dataset.pdpSplideMounted = 'true';
+      root._pdpMainSplide = mainInstance;
+
+      return true;
+    }
+
+    function waitForSplide(attempt = 0) {
+      const maxAttempts = 40;
+
+      if (initPdpSection()) return;
+
+      if (attempt >= maxAttempts) {
+        console.warn('PDP I: Splide no estuvo disponible a tiempo.');
+        return;
+      }
+
+      setTimeout(() => {
+        waitForSplide(attempt + 1);
+      }, 150);
+    }
+
+    function initRestOfSection() {
+      const root = document.getElementById(`pdp-i-${sectionId}`);
+      if (!root || root.dataset.pdpReady === 'true') return;
+      root.dataset.pdpReady = 'true';
+
+      const productFormComponent = root.querySelector('product-form-component');
+      const variantIdInput = root.querySelector('product-form-component input[name="id"]');
+      const optionInputs = root.querySelectorAll('[data-pdp-option-input]');
+
+      if (optionInputs.length) {
+        const variants = {{ current_product.variants | json }};
+
+        const syncVariant = () => {
+          const selectedOptions = [];
+          const optionGroups = {};
+
+          optionInputs.forEach((input) => {
+            if (!optionGroups[input.name]) optionGroups[input.name] = [];
+            optionGroups[input.name].push(input);
+          });
+
+          Object.keys(optionGroups).forEach((key) => {
+            const checked = optionGroups[key].find((input) => input.checked);
+            if (checked) selectedOptions.push(checked.value);
+          });
+
+          const matchedVariant = variants.find((variant) => {
+            if (!variant.options) return false;
+            return JSON.stringify(variant.options) === JSON.stringify(selectedOptions);
+          });
+
+          if (!matchedVariant) return;
+
+          const priceTarget = root.querySelector('[data-pdp-price]');
+
+          if (variantIdInput) {
+            variantIdInput.value = matchedVariant.id;
+            variantIdInput.dispatchEvent(new Event('change', { bubbles: true }));
+            variantIdInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+
+          if (productFormComponent) {
+            productFormComponent.setAttribute('data-product-id', matchedVariant.product_id || '{{ current_product.id }}');
+          }
+
+          if (priceTarget && window.Shopify && Shopify.formatMoney) {
+            if (matchedVariant.compare_at_price && matchedVariant.compare_at_price > matchedVariant.price) {
+              priceTarget.innerHTML = `
+                <span class="price-sale-pdp-i">${Shopify.formatMoney(matchedVariant.price, window.theme?.moneyFormat || "{{ shop.money_format | escape }}")}</span>
+                <span class="price-compare-pdp-i"><s>${Shopify.formatMoney(matchedVariant.compare_at_price, window.theme?.moneyFormat || "{{ shop.money_format | escape }}")}</s></span>
+                {% if price_suffix_label != blank %}<span class="price-suffix-pdp-i"> / {{ price_suffix_label }}</span>{% endif %}
+              `;
+            } else {
+              priceTarget.innerHTML = `
+                <span class="price-regular-pdp-i">${Shopify.formatMoney(matchedVariant.price, window.theme?.moneyFormat || "{{ shop.money_format | escape }}")}</span>
+                {% if price_suffix_label != blank %}<span class="price-suffix-pdp-i"> / {{ price_suffix_label }}</span>{% endif %}
+              `;
+            }
+          }
+
+          if (root._pdpMainSplide && matchedVariant.featured_media && matchedVariant.featured_media.id) {
+            const slides = Array.from(root.querySelectorAll(`#pdp-main-splide-${sectionId} .splide__slide`));
+            const targetSlideIndex = slides.findIndex((slide) => {
+              return String(slide.dataset.mediaId) === String(matchedVariant.featured_media.id);
+            });
+
+            if (targetSlideIndex > -1) {
+              root._pdpMainSplide.go(targetSlideIndex);
+            }
+          }
+        };
+
+        optionInputs.forEach((input) => input.addEventListener('change', syncVariant));
+      }
+
+      /*
+      const zoomDialogComponent = root.querySelector(`#pdp-zoom-dialog-${sectionId}`);
+      const zoomDialog = zoomDialogComponent ? zoomDialogComponent.querySelector('dialog') : null;
+      const zoomTriggers = root.querySelectorAll('[data-pdp-zoom-trigger]');
+      const zoomThumbs = root.querySelectorAll('[data-pdp-zoom-thumb]');
+      const zoomItems = root.querySelectorAll('[data-pdp-zoom-item]');
+      const zoomClose = root.querySelector('[data-pdp-zoom-close]');
+
+      const openZoomAt = (index) => {
+        if (!zoomDialog) return;
+
+        zoomItems.forEach((item) => {
+          item.hidden = item.dataset.pdpZoomItem !== String(index);
+        });
+
+        zoomThumbs.forEach((thumb) => {
+          if (thumb.dataset.pdpZoomThumb === String(index)) {
+            thumb.setAttribute('aria-selected', 'true');
+          } else {
+            thumb.removeAttribute('aria-selected');
+          }
+        });
+
+        if (!zoomDialog.open && typeof zoomDialog.showModal === 'function') {
+          zoomDialog.showModal();
+        }
+      };
+
+      const closeZoom = () => {
+        if (!zoomDialog) return;
+        if (zoomDialog.open && typeof zoomDialog.close === 'function') {
+          zoomDialog.close();
+        }
+      };
+
+      zoomTriggers.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          openZoomAt(trigger.dataset.pdpZoomTrigger);
+        });
+
+        trigger.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openZoomAt(trigger.dataset.pdpZoomTrigger);
+          }
+        });
+      });
+
+      zoomThumbs.forEach((thumb) => {
+        thumb.addEventListener('click', () => {
+          openZoomAt(thumb.dataset.pdpZoomThumb);
+        });
+      });
+
+      zoomItems.forEach((item) => {
+        item.addEventListener('click', () => {
+          closeZoom();
+        });
+      });
+
+      if (zoomClose) {
+        zoomClose.addEventListener('click', () => {
+          closeZoom();
+        });
+      }
+      */
+
+
+    }
+
+
+    function mountQuantityInsideSubscriptionWidget() {
+      const root = document.getElementById(`pdp-i-${sectionId}`);
+      if (!root) return;
+
+      const productForm = root.querySelector('product-form-component form');
+      if (!productForm) return;
+
+      let observer = null;
+      let rafScheduled = false;
+
+      const moveQuantity = () => {
+        const quantityWrapper = productForm.querySelector('.quantity-selector-wrapper');
+        if (!quantityWrapper) return;
+
+        const addToCartComponent = productForm.querySelector('add-to-cart-component');
+        if (!addToCartComponent) return;
+
+        const subscriptionWidget =
+          addToCartComponent.querySelector('.sealsubs-target-element.sls-homepage-automatic') ||
+          addToCartComponent.querySelector('.sealsubs-container');
+
+        const addToCartButton = addToCartComponent.querySelector('button[type="submit"]');
+
+        if (!subscriptionWidget || !addToCartButton) return;
+
+        // 🔥 CLAVE: verificar si ya está en el lugar correcto
+        const isCorrect =
+          quantityWrapper.parentElement === addToCartComponent &&
+          subscriptionWidget.nextElementSibling === quantityWrapper;
+
+        if (isCorrect) return;
+
+        // 🔥 mover dentro del add-to-cart-component
+        addToCartComponent.insertBefore(quantityWrapper, addToCartButton);
+      };
+
+      const scheduleMove = () => {
+        if (rafScheduled) return;
+        rafScheduled = true;
+
+        requestAnimationFrame(() => {
+          rafScheduled = false;
+          moveQuantity();
+        });
+      };
+
+      moveQuantity();
+
+      observer = new MutationObserver(() => {
+        scheduleMove();
+      });
+
+      observer.observe(productForm, {
+        childList: true,
+        subtree: true
+      });
+
+      root._subscriptionQuantityObserver = observer;
+    }
+
+
+
+
+    function boot() {
+      initRestOfSection();
+      waitForSplide();
+      mountQuantityInsideSubscriptionWidget();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot, { once: true });
+    } else {
+      boot();
+    }
+
+    document.addEventListener('shopify:section:load', (event) => {
+      if (event.detail && event.detail.sectionId === sectionId) {
+        const root = document.getElementById(`pdp-i-${sectionId}`);
+        if (!root) return;
+
+        if (root._subscriptionQuantityObserver) {
+          root._subscriptionQuantityObserver.disconnect();
+          root._subscriptionQuantityObserver = null;
+        }
+
+        root.dataset.pdpReady = '';
+        root.dataset.pdpSplideMounted = '';
+        boot();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+  {
+    "name": "PDP I",
+    "tag": "section",
+    "class": "section-pdp-i",
+    "settings": [
+    ],
+    "presets": [
+      {
+        "name": "PDP I"
+      }
+    ]
+  }
+{% endschema %}

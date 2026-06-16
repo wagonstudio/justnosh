@@ -1,0 +1,72 @@
+<section class="about-iv">
+  <div class="in-about container-i">
+    <div class="flex-i">
+
+      <!-- LEFT -->
+      <div class="item-about item-about-left w-12 w-md-6">
+        <div class="in-item-about">
+          {% if section.settings.heading != blank %}
+            <div class="he-m uppercase fw-extrablack">
+              <h2>
+                {{ section.settings.heading }}
+              </h2>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="item-about item-about-right w-12 w-md-6">
+        <div class="in-item-about">
+
+          {% if section.settings.lead != blank %}
+            <div class="bo-m fw-semibold">
+              {{ section.settings.lead }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.text != blank %}
+            <div class="bo-s fw-regular">
+              {{ section.settings.text }}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About IV",
+  "tag": "section",
+  "class": "section-about-iv",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WHY COLLAGEN PROTEIN"
+    },
+    {
+      "type": "richtext",
+      "id": "lead",
+      "label": "Lead text",
+      "default": "<p>We use 100% grass-fed collagen peptides as our featured protein source because of their unique amino acid profile.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Body text",
+      "default": "<p>Collagen is naturally rich in glycine, proline, and hydroxyproline, amino acids that are found in high concentrations in structural tissues and are less abundant in many common protein sources.</p><p>Collagen functions differently from muscle-focused proteins like whey or soy and is not considered a complete protein. We choose it intentionally as part of a protein-forward, ingredient-conscious approach that complements a varied diet rather than replacing other protein types.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About IV"
+    }
+  ]
+}
+{% endschema %}

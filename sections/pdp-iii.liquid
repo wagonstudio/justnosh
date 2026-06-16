@@ -1,0 +1,187 @@
+{% liquid
+  assign current_product = product
+  assign nutrition_images = current_product.metafields.custom.nutritional_facts_files.value
+%}
+
+<section class="pdp-iii" id="pdp-iii-{{ section.id }}">
+  <div class="in-pdp-iii container-i">
+    <div class="inner-pdp-iii">
+      <div class="tabs-pdp-iii" role="tablist">
+        <button
+          class="tab-pdp-iii active he-s uppercase fw-bold"
+          id="pdp-iii-tab-nutrition-{{ section.id }}"
+          type="button"
+          role="tab"
+          data-bs-toggle="tab"
+          data-bs-target="#pdp-iii-panel-nutrition-{{ section.id }}"
+          aria-controls="pdp-iii-panel-nutrition-{{ section.id }}"
+          aria-selected="true"
+        >
+          <span>Nutrition Facts</span>
+        </button>
+
+        <button
+          class="tab-pdp-iii he-s uppercase fw-bold"
+          id="pdp-iii-tab-collagen-{{ section.id }}"
+          type="button"
+          role="tab"
+          data-bs-toggle="tab"
+          data-bs-target="#pdp-iii-panel-collagen-{{ section.id }}"
+          aria-controls="pdp-iii-panel-collagen-{{ section.id }}"
+          aria-selected="false"
+        >
+          <span>Why Collagen Protein</span>
+        </button>
+
+        <button
+          class="tab-pdp-iii he-s uppercase fw-bold"
+          id="pdp-iii-tab-seed-{{ section.id }}"
+          type="button"
+          role="tab"
+          data-bs-toggle="tab"
+          data-bs-target="#pdp-iii-panel-seed-{{ section.id }}"
+          aria-controls="pdp-iii-panel-seed-{{ section.id }}"
+          aria-selected="false"
+        >
+          <span>Seed Oil Free Certified</span>
+        </button>
+      </div>
+
+      <div class="body-pdp-iii tab-content">
+        <div
+          class="panel-pdp-iii tab-pane fade show active"
+          id="pdp-iii-panel-nutrition-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-iii-tab-nutrition-{{ section.id }}"
+        >
+          <div class="nutrition-pdp-iii">
+            {% if nutrition_images != blank %}
+              <div class="nutrition-facts-grid nutrition-facts-grid--count-{{ nutrition_images.count }}">
+                {% for nutrition_image in nutrition_images limit: 4 %}
+                  <figure class="nutrition-facts-item">
+                    {{
+                      nutrition_image
+                      | image_url: width: 1600
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '360, 480, 720, 960, 1200, 1600',
+                        sizes: '(max-width: 767px) 100vw, 50vw',
+                        alt: 'Nutrition facts'
+                    }}
+                  </figure>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div
+          class="panel-pdp-iii tab-pane fade"
+          id="pdp-iii-panel-collagen-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-iii-tab-collagen-{{ section.id }}"
+        >
+          <div class="content-tab-pdp-iii">
+            <div class="info-content">
+              <div class="flex-i gap-i space-between">
+                <div class="bo-m w-12 w-md-5">
+                  <p><strong class="fw-semibold">We use 100% grass-fed collagen peptides as our primary protein source because of their unique amino acid profile.</strong> Collagen is naturally rich in glycine, proline, and hydroxyproline, amino acids that are commonly found in structural tissues but are less abundant in many modern protein sources.</p>
+                </div>
+
+                <div class="bo-m w-12 w-md-5">
+                  <p>Collagen functions differently from muscle-focused proteins like whey or soy and is not considered a complete protein. We chose it intentionally to complement a <strong class="fw-semibold">protein-forward, ingredient-conscious approach rather than replace other protein types.</strong> Collagen is best understood as one part of a varied diet that includes multiple sources of protein.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="panel-pdp-iii tab-pane fade"
+          id="pdp-iii-panel-seed-{{ section.id }}"
+          role="tabpanel"
+          aria-labelledby="pdp-iii-tab-seed-{{ section.id }}"
+        >
+          <div class="content-tab-pdp-iii">
+            <div class="info-content">
+              <div class="flex-i gap-i space-between">
+                <div class="bo-m w-12 w-md-5">
+                  <p><strong class="fw-semibold">JustNosh bars are verified by third-party lab testing to contain zero industrial seed oils. Our products are certified by the Seed Oil Free Alliance,</strong> an independent organization that evaluates ingredients and finished products for seed oil content.</p>
+                </div>
+
+                <div class="bo-m w-12 w-md-5">
+                  <p>While some oils can be confusing by name alone, certification is based on lab analysis rather than assumptions. <strong class="fw-semibold">Our certification confirms that JustNosh bars contain zero seed oils and are low in omega-6 fats. Learn more about certification standards at <a href="https://seedoilfreecertified.com" target="_blank" rel="noopener" aria-label="Go to Seed Oil Free Certified">seedoilfreecertified.com</a></strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  #pdp-iii-{{ section.id }} .nutrition-facts-grid {
+    width: 100%;
+    column-gap: 12px;
+  }
+
+  #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-1 {
+    columns: 1;
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-2 {
+    columns: 2;
+  }
+  #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-3 {
+    columns:3;
+  }
+  #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-4 {
+    columns: 2;
+  }
+
+  #pdp-iii-{{ section.id }} .nutrition-facts-item {
+    display: block;
+    width: 100%;
+    margin: 0 0 24px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #pdp-iii-{{ section.id }} .nutrition-facts-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media screen and (max-width: 767px) {
+    #pdp-iii-{{ section.id }} .nutrition-facts-grid,
+    #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-2,
+    #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-3,
+    #pdp-iii-{{ section.id }} .nutrition-facts-grid--count-4 {
+      columns: 1;
+    }
+
+    #pdp-iii-{{ section.id }} .nutrition-facts-item {
+      margin-bottom: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "PDP III",
+  "tag": "section",
+  "class": "section-pdp-iii",
+  "settings": [],
+  "presets": [
+    {
+      "name": "PDP III"
+    }
+  ]
+}
+{% endschema %}

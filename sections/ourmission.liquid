@@ -1,0 +1,167 @@
+<section class="ourmission-i">
+  <div class="in-ourmission">
+    <div class="container-ii">
+      <div class="content">
+        {% if section.settings.eyebrow != blank %}
+          <div class="bo-l uppercase fw-semibold">
+            <h4>{{ section.settings.eyebrow }}</h4>
+          </div>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <div class="he-l fw-medium">
+            <div>{{ section.settings.heading }}</div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn-i outline-i" data-anim="fade-up">
+            <span>{{ section.settings.button_label }}</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <aside class="bg">
+      {% if section.settings.detail_1 != blank %}
+        <figure class="detail detail-1">
+          {{
+            section.settings.detail_1
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.detail_1.alt | default: 'Detail image 1'
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.detail_2 != blank %}
+        <figure class="detail detail-2">
+          {{
+            section.settings.detail_2
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.detail_2.alt | default: 'Detail image 2'
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.detail_3 != blank %}
+        <figure class="detail detail-3">
+          {{
+            section.settings.detail_3
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.detail_3.alt | default: 'Detail image 3'
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.detail_4 != blank %}
+        <figure class="detail detail-4">
+          {{
+            section.settings.detail_4
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.detail_4.alt | default: 'Detail image 4'
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.detail_5 != blank %}
+        <figure class="detail detail-5">
+          {{
+            section.settings.detail_5
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.detail_5.alt | default: 'Detail image 5'
+          }}
+        </figure>
+      {% endif %}
+
+      {% if section.settings.detail_6 != blank %}
+        <figure class="detail detail-6">
+          {{
+            section.settings.detail_6
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.detail_6.alt | default: 'Detail image 6'
+          }}
+        </figure>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Our mission",
+  "tag": "section",
+  "class": "section-ourmission-i",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "OUR MISSION"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<h2>WE BELIEVE IN FUELING WITH CLEAN INGREDIENTS AND HIGH PROTEIN IN EVERY BITE!</h2>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More About JustNosh"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_1",
+      "label": "Detail image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_2",
+      "label": "Detail image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_3",
+      "label": "Detail image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_4",
+      "label": "Detail image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_5",
+      "label": "Detail image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_6",
+      "label": "Detail image 6"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Our mission"
+    }
+  ]
+}
+{% endschema %}

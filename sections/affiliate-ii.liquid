@@ -1,0 +1,130 @@
+<section class="affiliate-ii">
+  <div class="in-affiliate container-iii">
+    <div class="flex-i">
+
+      <!-- LEFT -->
+      <div class="item-affiliate item-affiliate-content w-12 w-md-6">
+        <div class="in-item-affiliate">
+
+          {% if section.settings.heading != blank %}
+            <div class="he-m fw-extrablack">
+              <h2>
+                {{ section.settings.heading }}
+              </h2>
+            </div>
+          {% endif %}
+
+          {% if section.settings.subheading != blank %}
+            <div class="bo-m">
+              <p>{{ section.settings.subheading }}</p>
+            </div>
+          {% endif %}
+
+          {% if section.blocks.size > 0 %}
+            <div class="list-affiliate" >
+              {% for block in section.blocks %}
+                <div class="item-list-affiliate" {{ block.shopify_attributes }}>
+                  <div class="in-item-list-affiliate flex-i align-center-i">
+
+                    <div class="icon-affiliate">
+                      <img
+                        src="https://cdn.shopify.com/s/files/1/0802/9647/6893/files/la_check.svg?v=1777399790"
+                        alt="check"
+                        loading="lazy"
+                      >
+                    </div>
+
+                    <div class="he-xs fw-semibold">
+                      <span>{{ block.settings.text }}</span>
+                    </div>
+
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="item-affiliate item-affiliate-media w-12 w-md-6">
+        <div class="in-item-affiliate">
+
+          {% if section.settings.image != blank %}
+            <figure class="media-affiliate">
+              {{
+                section.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '480, 720, 960, 1200',
+                  alt: section.settings.image_alt | default: section.settings.heading
+              }}
+            </figure>
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Affiliate II",
+  "tag": "section",
+  "class": "section-affiliate-ii",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WHO THIS IS FOR"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "If you share our values, we'd love to work together."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "List item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Dietitians and nutrition professionals"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Affiliate II",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Dietitians and nutrition professionals" } },
+        { "type": "item", "settings": { "text": "Ingredient-focused creators" } },
+        { "type": "item", "settings": { "text": "Fitness and wellness enthusiasts" } },
+        { "type": "item", "settings": { "text": "Clinicians and practitioners" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

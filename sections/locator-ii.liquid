@@ -1,0 +1,126 @@
+<section class="contact-i locator-ii">
+  <div class="in-contact container-i">
+
+    <div class="head-contact">
+      {% if section.settings.heading != blank %}
+        <div class="he-m fw-extrablack">
+          <h2>
+            {{ section.settings.heading }}
+          </h2>
+        </div>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="bo-m">
+          <p>{{ section.settings.subheading }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="body-contact">
+      <div class="item-contact w-12">
+        <div class="in-item-contact">
+          {% assign form_success_id = 'locator-' | append: section.id %}
+
+          {% form 'contact', class: 'form-contact' %}
+
+            <input type="hidden" name="contact[form_success_id]" value="{{ form_success_id }}">
+            <input type="hidden" name="contact[form_type]" value="Store locator request">
+            <input type="hidden" name="contact[category]" value="Store locator inquiry">
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="LocatorName-{{ section.id }}">Name <strong>*</strong></label>
+              <input class="bo-xs" id="LocatorName-{{ section.id }}" type="text" name="contact[name]" placeholder="John" required>
+            </div>
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="LocatorEmail-{{ section.id }}">Email <strong>*</strong></label>
+              <input class="bo-xs" id="LocatorEmail-{{ section.id }}" type="email" name="contact[email]" placeholder="name@gmail.com" required>
+            </div>
+
+            <div class="field-affiliate">
+              <label class="bo-m uppercase" for="LocatorMessage-{{ section.id }}">Message <strong>*</strong></label>
+              <textarea class="bo-xs" id="LocatorMessage-{{ section.id }}" name="contact[body]" placeholder="Tell us what's on your mind. Whether it's a store request or a partnership inquiry, we'd love to hear from you." required></textarea>
+            </div>
+            <div class="bo-s fw-medium text-inidication">
+              <p><span>*</span> Indicates a required field </p>
+            </div>
+
+            <div
+              class="action-affiliate w-12"
+              data-form-success-wrapper
+              data-form-success-id="{{ form_success_id }}"
+              data-form-posted="{% if form.posted_successfully? %}true{% else %}false{% endif %}"
+            >
+              <button
+                type="submit"
+                class="btn-i btn-pink-ii w-12"
+                data-form-submit-button
+              >
+                <span>{{ section.settings.button_label }}</span>
+              </button>
+
+              <div
+                class="form-success-message"
+                data-form-success-message
+                hidden
+              >
+                <span class="form-success-message__text bo-s">
+                  Thank you! Your message has been sent successfully. We'll get back to you as soon as possible.
+                </span>
+              </div>
+            </div>
+
+            {% if section.settings.email_note != blank %}
+              <div class="bo-xs note-affiliate">
+                <div>{{ section.settings.email_note }}</div>
+              </div>
+            {% endif %}
+
+          {% endform %}
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Locator II",
+  "tag": "section",
+  "class": "section-locator-ii",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "DON'T SEE JUSTNOSH AT A STORE NEAR YOU?"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Let us know where you shop, or reach out about carrying JustNosh.\nWe read every message."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "richtext",
+      "id": "email_note",
+      "label": "Email note",
+      "default": "<p>Or email us directly at hello@jagprovisions.com</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Locator II"
+    }
+  ]
+}
+{% endschema %}

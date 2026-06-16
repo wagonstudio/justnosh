@@ -1,0 +1,108 @@
+{% liquid
+  assign current_product = product
+  assign ingredients = current_product.metafields.custom.key_ingredients.value
+  assign ingredient_image = current_product.metafields.custom.key_ingredients_image.value
+  assign ingredient_image_2 = current_product.metafields.custom.key_ingredients_image_responsive.value
+%}
+
+<section class="pdp-ii" id="pdp-ii-{{ section.id }}">
+  <div class="in-pdp-ii container-i">
+
+    <div class="head-pdp-ii">
+      <div class="he-m fw-extrablack uppercase">
+        <h2>KEY INGREDIENTS</h2>
+      </div>
+
+      <div class="bo-m fw-medium">
+        <p>
+          We flavor our bars using real, recognizable ingredients selected
+          for function, flavor, and digestibility.
+        </p>
+      </div>
+    </div>
+
+    <div class="body-pdp-ii container-ii">
+      <div class="ingredients-pdp-ii flex-i gap-i align-center">
+
+        <div class="ingredients-col-pdp-ii ingredients-col-pdp-ii-left w-3 w-md-4">
+          {% for ingredient in ingredients %}
+            {% assign modulo = forloop.index0 | modulo: 2 %}
+            {% if modulo == 0 %}
+              <div class="item-ingredient-pdp-ii">
+                <div class="bo-m uppercase">
+                  <span>{{ ingredient }}</span>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="image-pdp-ii w-6 w-md-4">
+          {% if ingredient_image != blank %}
+            <figure class="d-none d-md-block" data-anim="fade-in">
+              {{
+                ingredient_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '480, 720, 960, 1200, 1400',
+                  alt: 'Key ingredients',
+                  data-parallax: '-0.02'
+              }}
+            </figure>
+          {% endif %}
+          {% if ingredient_image_2 != blank %}
+            <figure class="d-md-none" data-anim="fade-in">
+              {{
+                ingredient_image_2
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '480, 720, 960, 1200, 1400',
+                  alt: 'Key ingredients',
+                  data-parallax: '-0.02'
+              }}
+            </figure>
+          {% endif %}
+        </div>
+
+        <div class="ingredients-col-pdp-ii ingredients-col-pdp-ii-right w-3 w-md-4">
+          {% for ingredient in ingredients %}
+            {% assign modulo = forloop.index0 | modulo: 2 %}
+            {% if modulo == 1 %}
+              <div class="item-ingredient-pdp-ii">
+                <div class="bo-m uppercase">
+                  <span>{{ ingredient }}</span>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="foot-pdp-ii">
+      <div class="bo-s fw-light">
+        <p>
+          Full ingredient list available on packaging and in the Nutrition Facts tab below.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "PDP II",
+  "tag": "section",
+  "class": "section-pdp-ii",
+  "settings": [],
+  "presets": [
+    {
+      "name": "PDP II"
+    }
+  ]
+}
+{% endschema %}

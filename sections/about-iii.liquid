@@ -1,0 +1,139 @@
+<section class="about-iii why-i">
+  <div class="in-about container-i">
+    <div class="head-about">
+      {% if section.settings.heading != blank %}
+        <div class="he-m fw-extrablack">
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <div class="bo-m">
+          <div>{{ section.settings.text }}</div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="body-about body-why">
+        <div class="flex-i">
+          {% for block in section.blocks %}
+            <div class="item-about item-why" {{ block.shopify_attributes }}>
+              <div class="in-item-about in-item-why">
+                {% if block.settings.icon != blank %}
+                  <div class="media-about media-why">
+                    {{
+                      block.settings.icon
+                      | image_url: width: 220
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '80, 120, 180, 220',
+                        alt: block.settings.title | escape
+                    }}
+                  </div>
+                {% endif %}
+
+                <div class="data-about data-why">
+                  {% if block.settings.title != blank %}
+                    <div class="he-xs fw-semibold ">
+                      <h3>{{ block.settings.title }}</h3>
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.text != blank %}
+                    <div class="bo-m">
+                      <p>{{ block.settings.text }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About III",
+  "tag": "section",
+  "class": "section-about-iii",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WHAT WE STAND FOR"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Ingredient sourcing matters to us. Wherever possible, we choose organically sourced ingredients because it aligns with our standards for quality and transparency.\nNot as a trend, but as a baseline. Not every ingredient is certified organic, but every ingredient is chosen deliberately.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "About item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "14-16g Protein"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Including 10g Grass-Fed Collagen"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "About III",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "title": "14-16g Protein",
+            "text": "Including 10g Grass-Fed Collagen"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Easy To Digest",
+            "text": "Gluten-Free, Dairy-Free, FODMAP Friendly"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "No Fillers",
+            "text": "No Artificial Flavors"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Certified Seed Oil Free",
+            "text": ""
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

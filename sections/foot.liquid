@@ -1,0 +1,285 @@
+<div class="footer-i">
+  <div class="in-footer">
+    <div class="container-i">
+      <div class="main-footer">
+        <div class="col-footer col-footer-1">
+          <div class="brand-footer">
+            <div class="logo-footer">
+              <a href="{{ routes.root_url }}">
+                {% if section.settings.logo != blank %}
+                  {{
+                    section.settings.logo
+                    | image_url: width: 400
+                    | image_tag:
+                      loading: 'lazy',
+                      alt: section.settings.logo.alt | default: shop.name
+                  }}
+                {% else %}
+                  <div class="he-m">
+                    <span>{{ shop.name }}</span>
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-footer col-footer-2">
+          <div class="nav-footer">
+            {% if section.settings.shop_heading != blank or section.settings.shop_menu != blank %}
+              <div class="item-nav-footer">
+                {% if section.settings.shop_heading != blank %}
+                  <div class="he-xs fw-bold">
+                    <h4>{{ section.settings.shop_heading }}</h4>
+                  </div>
+                {% endif %}
+
+                {% if section.settings.shop_menu != blank %}
+                  <div class="links-footer">
+                    {% for link in section.settings.shop_menu.links %}
+                      <div class="link-footer">
+                        <a href="{{ link.url }}" class="bo-s fw-regular">{{ link.title }}</a>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.learn_heading != blank or section.settings.learn_menu != blank %}
+              <div class="item-nav-footer">
+                {% if section.settings.learn_heading != blank %}
+                  <div class="he-xs fw-bold">
+                    <h4>{{ section.settings.learn_heading }}</h4>
+                  </div>
+                {% endif %}
+
+                {% if section.settings.learn_menu != blank %}
+                  <div class="links-footer">
+                    {% for link in section.settings.learn_menu.links %}
+                      <div class="link-footer">
+                        <a href="{{ link.url }}" class="bo-s fw-regular">{{ link.title }}</a>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.support_heading != blank or section.settings.support_menu != blank %}
+              <div class="item-nav-footer">
+                {% if section.settings.support_heading != blank %}
+                  <div class="he-xs fw-bold">
+                    <h4>{{ section.settings.support_heading }}</h4>
+                  </div>
+                {% endif %}
+
+                {% if section.settings.support_menu != blank %}
+                  <div class="links-footer">
+                    {% for link in section.settings.support_menu.links %}
+                      <div class="link-footer">
+                        <a href="{{ link.url }}" class="bo-s fw-regular">{{ link.title }}</a>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-footer col-footer-3">
+          <div class="cta-footer">
+            {% if section.settings.cta_heading != blank %}
+              <div class="he-s fw-black uppercase">
+                <span>{{ section.settings.cta_heading }}</span>
+              </div>
+            {% endif %}
+
+            {% if section.settings.cta_text != blank %}
+              <div class="bo-s">
+                <p>{{ section.settings.cta_text }}</p>
+              </div>
+            {% endif %}
+
+            {% if section.settings.cta_label != blank and section.settings.cta_link != blank %}
+              <div class="action-footer">
+                <a href="{{ section.settings.cta_link }}" class="btn-i btn-pink-ii">
+                  <span>{{ section.settings.cta_label }}</span>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-footer">
+        <div class="social-footer gap-i">
+          {% if section.settings.instagram_url != blank %}
+            <div class="item-social-footer">
+              <a href="{{ section.settings.instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener">
+                <div class="icon-social">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.75 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+
+          {% if section.settings.tiktok_url != blank %}
+            <div class="item-social-footer">
+              <a href="{{ section.settings.tiktok_url }}" aria-label="TikTok" target="_blank" rel="noopener">
+                <div class="icon-social">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14.5 3c.4 2 1.5 3.4 3.5 4v2.8c-1.2 0-2.4-.4-3.4-1v5.4c0 3-2.4 5.3-5.4 5.3S3.8 17.2 3.8 14.2s2.4-5.4 5.4-5.4c.3 0 .7 0 1 .1v2.8a2.9 2.9 0 0 0-1-.2 2.7 2.7 0 1 0 2.7 2.7V3h2.6Z"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+
+          {% if section.settings.linkedin_url != blank %}
+            <div class="item-social-footer">
+              <a href="{{ section.settings.linkedin_url }}" aria-label="LinkedIn" target="_blank" rel="noopener">
+                <div class="icon-social">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.94 8.75H3.75V20h3.19V8.75ZM5.35 3.25a1.85 1.85 0 1 0 0 3.7 1.85 1.85 0 0 0 0-3.7ZM20.25 13.56c0-3.02-1.61-4.42-3.76-4.42-1.73 0-2.5.95-2.94 1.62V8.75h-3.06V20h3.19v-5.56c0-1.47.28-2.89 2.1-2.89 1.79 0 1.81 1.68 1.81 2.98V20h3.19v-6.44h-.53Z"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+          
+          {% if section.settings.facebook_url != blank %}
+            <div class="item-social-footer">
+              <a href="{{ section.settings.facebook_url }}" aria-label="Facebook" target="_blank" rel="noopener">
+                <div class="icon-social">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.7-1.6h1.6V4.8c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 4V11H8v3h2.7v8h2.8Z"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+
+        </div>
+
+        <div class="copy-footer">
+          <div class="bo-xs">
+            <p>
+              &copy; {{ 'now' | date: '%Y' }}
+              {% if section.settings.copyright_text != blank %}
+                {{ section.settings.copyright_text }}
+              {% else %}
+                {{ shop.name }}. All rights reserved.
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Foot",
+  "tag": "section",
+  "class": "section-footer-i",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "shop_heading",
+      "label": "Shop heading",
+      "default": "SHOP"
+    },
+    {
+      "type": "link_list",
+      "id": "shop_menu",
+      "label": "Shop menu"
+    },
+    {
+      "type": "text",
+      "id": "learn_heading",
+      "label": "Learn heading",
+      "default": "LEARN"
+    },
+    {
+      "type": "link_list",
+      "id": "learn_menu",
+      "label": "Learn menu"
+    },
+    {
+      "type": "text",
+      "id": "support_heading",
+      "label": "Support heading",
+      "default": "SUPPORT"
+    },
+    {
+      "type": "link_list",
+      "id": "support_menu",
+      "label": "Support menu"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "CTA heading",
+      "default": "FIND US NEAR YOU"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Available at select retailers"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA button label",
+      "default": "STORE LOCATOR"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA button link"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "linkedin_url",
+      "label": "LinkedIn URL"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "JustNosh. All rights reserved."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Foot"
+    }
+  ]
+}
+{% endschema %}

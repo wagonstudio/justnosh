@@ -1,0 +1,162 @@
+{% liquid
+  assign featured_collection = section.settings.collection
+  if featured_collection == blank
+    assign featured_collection = collections['frontpage']
+  endif
+
+  assign products_limit = section.settings.products_limit
+  if products_limit == blank
+    assign products_limit = 5
+  endif
+%}
+
+<section class="shopping-i">
+  <div class="in-shopping container-i">
+    <div class="head-shopping">
+      {% if section.settings.heading != blank %}
+        <div class="he-m fw-extrablack">
+          <h2 >{{ section.settings.heading }}</h2>
+        </div>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="bo-m">
+          <p >{{ section.settings.subheading }}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if featured_collection != blank and featured_collection.products_count > 0 %}
+      <div class="body-shopping">
+        <div class="flex-i">
+          {% for product in featured_collection.products limit: products_limit %}
+            <div class="item-shopping" {{ product.shopify_attributes }}>
+              <div class="in-item-shopping">
+                {% assign product_bars = product.metafields.custom.bars.value %}
+
+                {% if product_bars != blank %}
+                  <div class="tag-shopping">
+                    <div class="tag-i sp-s uppercase fw-semibold">
+                      <span>{{ product_bars }}</span>
+                    </div>
+                  </div>
+                {% endif %}
+
+                <div class="media-shopping">
+                  <a href="{{ product.url }}">
+                    {% if product.featured_image != blank %}
+                      {{
+                        product.featured_image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '640, 900',
+                          alt: product.featured_image.alt | default: product.title
+                      }}
+                    {% endif %}
+
+                    {% assign shopping_media = product.metafields.custom.shopping_media.value %}
+
+                    {% if shopping_media != blank %}
+                      <div class="media-metafield media-count-{{ shopping_media.size }}">
+                        {% for media in shopping_media limit: 4 %}
+                          <figure class="media-{{ forloop.index }}">
+                            {{
+                              media
+                              | image_url: width: 500
+                              | image_tag:
+                                loading: 'lazy',
+                                widths: '120, 180, 240, 320, 500',
+                                alt: media.alt | default: product.title
+                            }}
+                          </figure>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </a>
+                </div>
+
+                <div class="data-shopping">
+                  <div class="title-shopping">
+                    <a href="{{ product.url }}" class="he-s fw-extrablack uppercase">{{ product.title }}</a>
+                  </div>
+
+                  <div class="price-shopping">
+                    <div class="sp-s fw-semibold uppercase">
+                      <p>{{ product.price | money }}</p>
+                    </div>
+                  </div>
+
+                  <div class="action-shopping">
+                    <a href="{{ product.url }}" class="btn-i btn-pink-ii">
+                      <span>{{ section.settings.button_label }}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="body-shopping">
+        <div class="bo-m">
+          <p>No products found in this collection.</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shopping",
+  "tag": "section",
+  "class": "section-shopping-i",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SHOP FLAVORS"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Find your favorite protein bar"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SHOP FLAVOR"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shopping"
+    }
+  ]
+}
+{% endschema %}
