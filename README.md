@@ -222,6 +222,23 @@ All client and developer documentation is in [`handoff/`](handoff/).
 | [`06-assets-inventory.md`](handoff/06-assets-inventory.md) | Design / dev | Logos, icons, fonts, file paths |
 | [`07-store-locator-guide.md`](handoff/07-store-locator-guide.md) | Content / ops | Stockist setup and updates |
 | [`08-product-management-guide.md`](handoff/08-product-management-guide.md) | Catalog managers | Products, metafields, PDP images |
+| [`10-about-page-guide.md`](handoff/10-about-page-guide.md) | Content editors | About page structure, content, and Minishop |
+| [`11-contact-page-guide.md`](handoff/11-contact-page-guide.md) | Content editors | Contact forms and newsletter section |
+| [`12-affiliate-page-guide.md`](handoff/12-affiliate-page-guide.md) | Content / ops | Affiliate page and application form |
+| [`13-store-locator-page-guide.md`](handoff/13-store-locator-page-guide.md) | Content / ops | Store Locator page audit and maintenance |
+
+### Page-Specific Documentation
+
+Dedicated guides for each customer-facing content page. Each file documents section order, Theme Editor settings, images, forms, dependencies, hardcoded content, and what the client can safely update versus what requires a developer.
+
+**Where to find maintenance instructions:** Open the guide for the page you are editing in [`handoff/`](handoff/). Use the **Maintenance Notes** section for client-safe updates and the **Developer Notes** section for technical constraints. General Theme Editor workflows are in [`02-cms-editing-guide.md`](handoff/02-cms-editing-guide.md).
+
+| Page | Guide | Summary |
+|---|---|---|
+| **About Us** | [`10-about-page-guide.md`](handoff/10-about-page-guide.md) | Five story sections (About I–V) plus a **Minishop** product showcase. Brand narrative, values, collagen positioning, and founder story are editable in the Theme Editor. Minishop displays three random products from a collection. |
+| **Contact** | [`11-contact-page-guide.md`](handoff/11-contact-page-guide.md) | **Contact I** general inquiry form and **Contact II** newsletter signup with decorative images. Both forms use Shopify's contact API; submissions go to Shopify Notifications. |
+| **Affiliate** | [`12-affiliate-page-guide.md`](handoff/12-affiliate-page-guide.md) | Five sections from program overview through application form (**Affiliate V**). Affiliate tracking runs via **UpPromote** (global app embed). Application submissions use Shopify contact forms. |
+| **Store Locator** | [`13-store-locator-page-guide.md`](handoff/13-store-locator-page-guide.md) | **Locator I** embeds the **Stockist** map (`map_r3mn7jvq`). **Locator II** provides a store-request contact form. Retail locations are managed in the Stockist dashboard, not in Shopify. |
 
 ---
 

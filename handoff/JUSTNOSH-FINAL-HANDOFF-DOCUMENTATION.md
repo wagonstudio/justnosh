@@ -22,6 +22,10 @@ This document is the **final client handoff summary** for the Just Nosh website.
 | Asset inventory | `06-assets-inventory.md` |
 | Store locator | `07-store-locator-guide.md` |
 | Product management | `08-product-management-guide.md` |
+| About page | `10-about-page-guide.md` |
+| Contact page | `11-contact-page-guide.md` |
+| Affiliate page | `12-affiliate-page-guide.md` |
+| Store Locator page | `13-store-locator-page-guide.md` |
 | Master index | `01-client-handoff-index.md` |
 
 ---
@@ -562,6 +566,28 @@ The following items were identified during the theme audit and require confirmat
 | **No homepage carousel** | Shopping grid is static, not a slider |
 | **Form field labels** | Hardcoded in theme — label changes need a developer |
 | **Heritage product-information** | Disabled on product template — do not re-enable without developer |
+
+---
+
+## Page-Specific Documentation
+
+Dedicated guides for each customer-facing content page live in `handoff/`. Each guide documents the page structure (sections in template order), editable Theme Editor content, images, forms, third-party dependencies, hardcoded content, and maintenance boundaries.
+
+**Where to find maintenance instructions:**
+
+| Need | Read |
+|---|---|
+| Client-safe updates (copy, images, Theme Editor settings) | **Maintenance Notes** in the relevant page guide below |
+| Developer-only changes (forms, layout, integrations) | **Developer Notes** and **Hardcoded Content** in the same guide |
+| General Theme Editor navigation | `02-cms-editing-guide.md` |
+| Stockist location management (Store Locator) | `07-store-locator-guide.md` and `13-store-locator-page-guide.md` |
+
+| Page | Guide | Summary |
+|---|---|---|
+| **About Us** | `10-about-page-guide.md` | Template `about` — sections **About I** through **About V** tell the brand story, values, collagen rationale, and founder narrative, followed by **Minishop** (three random products from a collection). No forms. Page body field in Shopify Pages is not used. |
+| **Contact** | `11-contact-page-guide.md` | Template `contact` — **Contact I** (general inquiry form) and **Contact II** (newsletter signup with decor images). Both use Shopify contact forms; success handling via `sessionStorage` in theme JS. |
+| **Affiliate** | `12-affiliate-page-guide.md` | Template `affiliate` — five sections (**Affiliate I–V**) covering audience, benefits, how it works, and an application form anchored at `#affiliate`. **UpPromote** handles affiliate tracking site-wide. |
+| **Store Locator** | `13-store-locator-page-guide.md` | Template `locator` — **Locator I** (Stockist map, widget tag `map_r3mn7jvq`) and **Locator II** (store-request form). Store locations are edited only in the Stockist dashboard. |
 
 ---
 
